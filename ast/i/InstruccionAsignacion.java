@@ -15,6 +15,14 @@ public class InstruccionAsignacion extends Instruccion {
     public TipoInstruccion getTipo() {
         return TipoInstruccion.ASIG;
     }
+
+    public Id getId() {
+        return this.identificador;
+    }
+    
+    public Expresion getValor() {
+        return this.valor;
+    }
     
     public String toString() {
         String s = "{{_Asignacion_}{" + identificador.toString() + ',' + valor.toString() + "}}";

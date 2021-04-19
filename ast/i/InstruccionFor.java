@@ -1,14 +1,17 @@
 package ast.i;
 
 import ast.e.Expresion;
+import ast.e.Id;
 
 public class InstruccionFor extends Instruccion {
+    private Id id;
     private Expresion valor_ini;
     private Expresion condicion;
     private Expresion paso;
     private Cuerpo cuerpo_for;
     
-    public InstruccionFor(Expresion valor_ini, Expresion condicion, Expresion paso, Cuerpo cuerpo_for) {
+    public InstruccionFor(Id id, Expresion valor_ini, Expresion condicion, Expresion paso, Cuerpo cuerpo_for) {
+        this.id = id;
         this.valor_ini = valor_ini;
         this.condicion = condicion;
         this.paso = paso;

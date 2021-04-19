@@ -60,10 +60,16 @@ non terminal Expresion Exp0, Exp1, Exp2, Exp3,
 
 non terminal Id Ident;
 			 
-non terminal Instruccion INST, INST_IF, INST_IFELSE, INST_WHILE, 
-             INST_SWITCH, INST_FOR, INST_ASIG, INST_DECL, 
-             INST_STRUCT, INST_DECL_FUN, 
-             INST_CALL_PROC;
+non terminal Instruccion INST;
+non terminal InstruccionIfElse INST_IF, INST_IFELSE;
+non terminal InstruccionWhile INST_WHILE; 
+non terminal InstruccionSwitch INST_SWITCH;
+non terminal InstruccionFor INST_FOR;
+non terminal InstruccionAsignacion INST_ASIG;
+non terminal InstruccionDeclaracion INST_DECL, INST_DECLASIG; 
+non terminal InstruccionDeclStruct INST_STRUCT;
+non terminal InstruccionDeclFuncion INST_DECL_FUN; 
+non terminal InstruccionLlamadaFuncion INST_CALL_PROC;
 
 non terminal Cuerpo CUER;
 
@@ -141,6 +147,10 @@ Exp7 ::= TRUE
         {: RESULT = as.bool_true(); :};
 Exp7 ::= FALSE
         {: RESULT = as.bool_false(); :};
+
+//CASO BASE IDENTIFICADORES
+Exp7 ::= Ident: id
+        {: RESULT = id; :};
         
 //3 INSTRUCCIONES
 
@@ -156,6 +166,8 @@ INST ::= INST_ASIG:op1
 {:RESULT = op1;:};
 INST ::= INST_DECL:op1
 {:RESULT = op1;:};
+INST ::= INST_DECLASIG:op1
+{:RESULT = op1;:};
 
 //IF
 INST_IF ::= IF PARAPERTURA Exp0: cond PARCIERRE LLAVEAPERTURA CUER: cif LLAVECIERRE
@@ -170,8 +182,11 @@ INST_WHILE ::= WHILE PARAPERTURA Exp0: cond PARCIERRE LLAVEAPERTURA CUER: cwhile
 {: RESULT = new InstruccionWhile(cond, cwhile); :};
 
 //FOR
-INST_FOR ::= FOR PARAPERTURA Exp0: id PUNTOCOMA Exp0: cond PUNTOCOMA Exp0: paso PARCIERRE LLAVEAPERTURA CUER: cfor LLAVECIERRE
-{: RESULT = new InstruccionFor(id, cond, paso, cfor); :}; 
+INST_FOR ::= FOR PARAPERTURA INST_ASIG: ini PUNTOCOMA Exp0: cond PUNTOCOMA INST_ASIG: paso PARCIERRE LLAVEAPERTURA CUER: cfor LLAVECIERRE
+{: RESULT = new InstruccionFor(ini.getId(), ini.getValor(), cond, paso.getValor(), cfor); :}; 
+
+INST_FOR ::= FOR PARAPERTURA INST_DECLASIG: ini PUNTOCOMA Exp0: cond PUNTOCOMA INST_ASIG: paso PARCIERRE LLAVEAPERTURA CUER: cfor LLAVECIERRE
+{: RESULT = new InstruccionFor(ini.getId(), ini.getValor(), cond, paso.getValor(), cfor); :}; 
 
 //ASIGNACION
 INST_ASIG ::= Ident: id IGUAL Exp0: exp
@@ -181,7 +196,8 @@ INST_ASIG ::= Ident: id IGUAL Exp0: exp
 INST_DECL ::= Tip: t Ident: id
 {: RESULT = new InstruccionDeclaracion(t,id); :};
 
-INST_DECL ::= Tip: t Ident: id IGUAL Exp0: exp
+//DECLARACION CON ASIGNACION
+INST_DECLASIG ::= Tip: t Ident: id IGUAL Exp0: exp
 {: RESULT = new InstruccionDeclaracion(t,id,exp); :};
 
 //IDENTIFICADORES

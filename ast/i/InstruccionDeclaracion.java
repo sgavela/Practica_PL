@@ -24,6 +24,18 @@ public class InstruccionDeclaracion extends Instruccion {
      public TipoInstruccion getTipo() {
          return TipoInstruccion.DECL;
      }
+
+     public Tipo getTipoVar() {
+        return this.tipo;
+    }
+    
+    public Id getId() {
+        return this.id;
+    }
+    
+    public Expresion getValor() {
+        return this.valor;
+    }
      
      public String toString() {
          String s = "{{_Declaracion_}{" + tipo.toString() + ',' + id.toString();
