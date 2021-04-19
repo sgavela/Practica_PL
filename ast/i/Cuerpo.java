@@ -17,4 +17,12 @@ public class Cuerpo {
     public ArrayDeque<Instruccion> getInstr() {
         return this.instrucciones;
     }
+
+    public String toString() {
+        String s = "";
+        for(Instruccion inst: instrucciones) {
+            s += inst.toString();
+        }
+        return s;
+    }
 }

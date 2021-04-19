@@ -14,4 +14,8 @@ private Tipos tipo;
     public boolean igual_tipo(Tipo t) {
         return this.tipo == t.tipo;
     }
+
+    public String toString() {
+        return tipo.toString();
+    }
 }
