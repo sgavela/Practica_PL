@@ -1,0 +1,4 @@
+bool j = true
+if(true){
+    int i = 2 + 1
+}

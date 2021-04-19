@@ -1,0 +1,25 @@
+-Variables, tipos y estructuras:
+	- Entero, bool, char y string.
+	- Listas de esas varibles (permitir listas de listas).
+	- Punteros estaría guay.
+	- Registros (structs).
+	- Funciones.
+	- Clases quizá sea demasiado.
+	- No sé qué son bloques anidados.
+	- Operaciones suma, resta, multiplicación y división de enteros.
+	- Operación igual, ||, && para bool.
+	- Tipos definidos por usuario quizá sea demasiado.
+
+- Instrucciones:
+	- Acceso a elemento según posición en lista.
+	- Acceso al valor apuntado por puntero.
+	- If then/If then else, for, while, switch(?).
+	- Llamadas a funciones.
+	- Reserva de memoria dinámica.
+
+- Errores:
+	-Indicar tipo y fila y columna.
+	- Parar comp o seguir según el error.
+
+
+

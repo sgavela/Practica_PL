@@ -1,0 +1,11 @@
+java -cp jlex.jar JLex.Main alex/AnalizadorLexicoTiny.l
+
+(Después borrar el fichero AnalizadorLexicoTiny.java y renombrar AnalizadorLexicoTiny.l.java a AnalizadorLexicoTiny.java)
+
+java -cp cup.jar java_cup.Main -parser AnalizadorSintacticoTiny -symbols ClaseLexica -nopositions asint/Tiny.cup
+
+(Después copiar AnalizadorSintacticoTiny y ClaseLexica a la carpeta asint y reemplazar los anteriores)
+
+javac -cp cup.jar alex/*.java asint/*.java ast/*.java ast/e/*.java ast/t/*.java ast/i/*.java errors/*.java
+
+java -cp ".;cup.jar" asint.Main "Ficheros test"/test1.txt

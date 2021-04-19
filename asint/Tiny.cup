@@ -1,0 +1,214 @@
+package asint;
+
+import java_cup.runtime.*;
+import alex.AnalizadorLexicoTiny;
+import alex.UnidadLexica;
+import errors.GestionErrores;
+import ast.*;
+import ast.e.*;
+import ast.i.*;
+import ast.t.*;
+import java.util.ArrayDeque;
+
+scan with {: return getScanner().next_token(); :};
+
+action code {:
+   private ASExpresion as = new ASExpresion();
+:};
+
+parser code {: 
+   private GestionErrores errores;
+   public void syntax_error(Symbol unidadLexica) {
+     errores.errorSintactico((UnidadLexica)unidadLexica);
+   }
+:};
+init with {: 
+   errores = new GestionErrores();
+   AnalizadorLexicoTiny alex = (AnalizadorLexicoTiny)getScanner();
+   alex.fijaGestionErrores(errores);
+:};
+
+
+terminal     String NUM, IDEN;
+terminal     TYPEDEF, STRUCT,
+
+             FUNCTION, RETURN, VOID, NEW, MAIN,
+
+             IF, ELSE,
+             WHILE, FOR, SWITCH, CASE,
+             BREAK, CONTINUE,
+             DEFAULT,
+
+             BOOLEAN, INTEGER, LIST, PUNT,
+             TRUE, FALSE, NULL,
+
+             SUM, SUB, MULT, DIV, MOD,
+             
+             MAYOR, MENOR, MENOROIGUAL, 
+             MAYOROIGUAL, IGUAL, IGUALIGUAL, 
+             NOIGUAL, AND, OR, NOT,
+             
+             PARAPERTURA, PARCIERRE, 
+             LLAVEAPERTURA, LLAVECIERRE,
+             CORCHAPERTURA, CORCHCIERRE, 
+             
+             COMA, PUNTOCOMA, DOSPUNTOS, PUNTO,
+             ASTERISCO, AMPERSAND, BARRABAJA;
+
+non terminal Expresion Exp0, Exp1, Exp2, Exp3, 
+			 Exp4, Exp5, Exp6, Exp7, Exp8;
+
+non terminal Id Ident;
+			 
+non terminal Instruccion INST, INST_IF, INST_IFELSE, INST_WHILE, 
+             INST_SWITCH, INST_FOR, INST_ASIG, INST_DECL, 
+             INST_STRUCT, INST_DECL_FUN, 
+             INST_CALL_PROC;
+
+non terminal Cuerpo CUER;
+
+non terminal Tipo Tip;
+
+non terminal ProgramaCompleto S;
+
+//1 PROGRAMA COMPLETO (SOlO CUERPO PARA TEST)
+CUER ::= INST:inst CUER:lista_inst
+{:lista_inst.addInstr(inst); RESULT = lista_inst;:};
+CUER   ::= 
+{:RESULT= new Cuerpo();:};
+
+//2 EXPRESIONES
+
+//OR
+Exp0 ::= Exp0: exp1 OR Exp1: exp2
+        {: RESULT = as.or(exp1, exp2); :};
+Exp0 ::= Exp1: exp
+        {: RESULT = exp; :};
+
+//AND
+Exp1 ::= Exp1: exp1 AND Exp2: exp2 
+        {: RESULT = as.and(exp1, exp2); :};
+Exp1 ::= Exp2 : exp
+        {: RESULT = exp; :};
+
+//NOT
+Exp2 ::= NOT Exp2: exp2 
+        {: RESULT = as.not(exp2); :};
+Exp2 ::= Exp3 : exp
+        {: RESULT = exp; :};
+
+//IGUALDAD Y NO IGUALDAD
+Exp3 ::= Exp3: exp1 IGUALIGUAL Exp4: exp2
+        {: RESULT = as.equals(exp1, exp2); :};
+Exp3 ::= Exp3: exp1 NOIGUAL Exp4: exp2
+        {: RESULT = as.nequals(exp1, exp2); :};
+Exp3 ::= Exp4: exp
+        {: RESULT = exp; :};
+
+//COMPARADORES
+Exp4 ::= Exp4: exp1 MENOR Exp5: exp2
+        {: RESULT = as.lt(exp1, exp2); :};
+Exp4 ::= Exp4: exp1 MAYOR Exp5: exp2
+        {: RESULT = as.gt(exp1, exp2); :};
+Exp4 ::= Exp4: exp1 MENOROIGUAL Exp5: exp2
+        {: RESULT = as.leq(exp1, exp2); :};
+Exp4 ::= Exp4: exp1 MAYOROIGUAL Exp5: exp2
+        {: RESULT = as.geq(exp1, exp2); :};
+Exp4 ::= Exp5: exp
+        {: RESULT = exp; :}; 
+
+//OPERADORES ARITMETICOS
+Exp5 ::= Exp5: exp1 SUM Exp6: exp2           
+        {: RESULT = as.suma(exp1, exp2); :};
+Exp5 ::= Exp5: exp1 SUB Exp6: exp2           
+        {: RESULT = as.resta(exp1, exp2); :}; 
+Exp5 ::= Exp6: exp           
+        {: RESULT = exp; :};
+        
+Exp6 ::= Exp6: exp1 MULT Exp7: exp2           
+        {: RESULT = as.mul(exp1, exp2); :};
+Exp6 ::= Exp6: exp1 DIV Exp7: exp2           
+        {: RESULT = as.div(exp1, exp2); :};
+Exp6 ::= Exp6: exp1 MOD Exp7: exp2           
+        {: RESULT = as.mod(exp1, exp2); :};
+Exp6 ::= Exp7: exp           
+        {: RESULT = exp; :};
+
+//CASOS BASE DE ENTEROS Y BOOLEANOS
+Exp7 ::= NUM: cadenaNum           
+        {: RESULT = as.num(cadenaNum); :};
+Exp7 ::= TRUE
+        {: RESULT = as.bool_true(); :};
+Exp7 ::= FALSE
+        {: RESULT = as.bool_false(); :};
+        
+//3 INSTRUCCIONES
+
+INST ::= INST_IF:op1
+{:RESULT = op1;:};
+INST ::= INST_IFELSE:op1
+{:RESULT = op1;:};
+INST ::= INST_WHILE:op1
+{:RESULT = op1;:};
+INST ::= INST_FOR:op1
+{:RESULT = op1;:};
+INST ::= INST_ASIG:op1
+{:RESULT = op1;:};
+INST ::= INST_DECL:op1
+{:RESULT = op1;:};
+
+//IF
+INST_IF ::= IF PARAPERTURA Exp0: cond PARCIERRE LLAVEAPERTURA CUER: cif LLAVECIERRE
+{: RESULT = new InstruccionIfElse(cond, cif); :};
+
+//IF-ELSE
+INST_IFELSE ::= IF PARAPERTURA Exp0: cond PARCIERRE LLAVEAPERTURA CUER: cif LLAVECIERRE ELSE LLAVEAPERTURA CUER: celse LLAVECIERRE
+{: RESULT = new InstruccionIfElse(cond, cif, celse); :};
+
+//WHILE
+INST_WHILE ::= WHILE PARAPERTURA Exp0: cond PARCIERRE LLAVEAPERTURA CUER: cwhile LLAVECIERRE
+{: RESULT = new InstruccionWhile(cond, cwhile); :};
+
+//FOR
+INST_FOR ::= FOR PARAPERTURA Exp0: id PUNTOCOMA Exp0: cond PUNTOCOMA Exp0: paso PARCIERRE LLAVEAPERTURA CUER: cfor LLAVECIERRE
+{: RESULT = new InstruccionFor(id, cond, paso, cfor); :}; 
+
+//ASIGNACION
+INST_ASIG ::= Ident: id IGUAL Exp0: exp
+{: RESULT = new InstruccionAsignacion(id, exp); :};
+
+//DECLARACION
+INST_DECL ::= Tip: t Ident: id
+{: RESULT = new InstruccionDeclaracion(t,id); :};
+
+INST_DECL ::= Tip: t Ident: id IGUAL Exp0: exp
+{: RESULT = new InstruccionDeclaracion(t,id,exp); :};
+
+//IDENTIFICADORES
+
+Ident ::= IDEN: id
+{: RESULT = new Id(id); :};
+
+//TIPOS
+
+Tip ::= INTEGER
+{: RESULT = new Tipo(Tipos.INTEGER); :};
+
+Tip ::= BOOLEAN
+{: RESULT = new Tipo(Tipos.BOOLEAN); :};
+
+Tip ::= LIST MENOR Tip: t COMA NUM: n MAYOR
+{: RESULT = new TipoLista(t, n); :};
+
+Tip ::= Tip: t ASTERISCO
+{: RESULT = new TipoPuntero(t); :};
+
+
+
+
+
+
+
+
+
+
