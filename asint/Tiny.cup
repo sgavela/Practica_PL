@@ -79,6 +79,7 @@ non terminal InstruccionDeclStruct INST_STRUCT;
 non terminal InstruccionDeclFuncion INST_DECL_FUN; 
 non terminal InstruccionLlamadaFuncion INST_CALL_PROC;
 non terminal InstruccionReturn INST_RETURN;
+non terminal InstruccionTypedef INST_TYPEDEF;
 
 non terminal ExpresionLlamadaFuncion EXPR_LLAM_FUN;
 
@@ -103,6 +104,9 @@ CABECERA ::= INST_DECL: inst PUNTOCOMA CABECERA: cab
 {: cab.addInstr(inst); RESULT = cab; :};
 
 CABECERA ::= INST_ASIG: inst PUNTOCOMA CABECERA: cab
+{: cab.addInstr(inst); RESULT = cab; :};
+
+CABECERA ::= INST_TYPEDEF: inst PUNTOCOMA CABECERA: cab
 {: cab.addInstr(inst); RESULT = cab; :};
 
 CABECERA ::=
@@ -338,6 +342,10 @@ INST_RETURN ::= RETURN Exp0: e
 //LLAMADA A FUNCION (PROCEDIMIENTO)
 INST_CALL_PROC ::= Ident: id PARAPERTURA ARGUMENTOSPROC_INI: arg PARCIERRE
 {: RESULT = new InstruccionLlamadaFuncion(id, arg); :};
+
+//TYPEDEF
+INST_TYPEDEF ::= TYPEDEF Tip: tipo Ident: id
+{: RESULT = new InstruccionTypedef(tipo, id); :};
 
 //IDENTIFICADORES
 Ident ::= IDEN: id
