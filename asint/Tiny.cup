@@ -78,6 +78,7 @@ non terminal InstruccionDeclaracion INST_DECL, INST_DECLASIG;
 non terminal InstruccionDeclStruct INST_STRUCT;
 non terminal InstruccionDeclFuncion INST_DECL_FUN; 
 non terminal InstruccionLlamadaFuncion INST_CALL_PROC;
+non terminal InstruccionReturn INST_RETURN;
 
 non terminal ExpresionLlamadaFuncion EXPR_LLAM_FUN;
 
@@ -209,7 +210,7 @@ Exp7 ::= EXPR_LLAM_FUN: llam_fun
 {: RESULT = llam_fun; :};
 
 //4 INSTRUCCIONES
-
+/*
 INST ::= INST_IF:op1
 {:RESULT = op1;:};
 INST ::= INST_IFELSE:op1
@@ -228,6 +229,9 @@ INST ::= INST_DECL_FUN:op1
 {:RESULT = op1;:};
 INST ::= INST_CALL_PROC:op1
 {:RESULT = op1;:};
+INST ::= INST_RETURN:op1
+{:RESULT = op1;:};
+*/
 
 // CUERPO
 CUER ::= INST_DECLASIG: inst PUNTOCOMA CUER: c
@@ -308,7 +312,7 @@ ARGUMENTOS ::=
 {: RESULT = new ArrayDeque<Tipo_Id>(); :};
 
 //DECLARACION DE FUNCION
-INST_DECL_FUN ::= FUNCTION Tip: tipo_dev Ident: id PARAPERTURA ARGUMENTOS_INI: arg PARCIERRE LLAVEAPERTURA CUER: c LLAVECIERRE
+INST_DECL_FUN ::= FUNCTION Tip: tipo_dev Ident: id PARAPERTURA ARGUMENTOS_INI: arg PARCIERRE LLAVEAPERTURA CUER: c INST_RETURN PUNTOCOMA LLAVECIERRE
 {: RESULT = new InstruccionDeclFuncion(tipo_dev, id, arg, c); :};
 
 INST_DECL_FUN ::= FUNCTION VOID Ident: id PARAPERTURA ARGUMENTOS_INI: arg PARCIERRE LLAVEAPERTURA CUER: c LLAVECIERRE
@@ -326,6 +330,10 @@ ARGUMENTOSPROC ::= COMA Exp0: e ARGUMENTOSPROC: arg
 
 ARGUMENTOSPROC ::= 
 {: RESULT = new ArrayDeque<Expresion>(); :};
+
+//RETURN
+INST_RETURN ::= RETURN Exp0: e
+{: RESULT = new InstruccionReturn(e); :};
 
 //LLAMADA A FUNCION (PROCEDIMIENTO)
 INST_CALL_PROC ::= Ident: id PARAPERTURA ARGUMENTOSPROC_INI: arg PARCIERRE

@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class InstruccionSwitch extends Instruccion {
-    private Expresion exp_caso;
+    private Id exp_caso;
     private HashMap<Expresion, Cuerpo> casos;
     private Cuerpo cuerpo_default;
     
