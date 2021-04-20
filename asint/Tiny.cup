@@ -77,6 +77,10 @@ non terminal Tipo Tip;
 
 non terminal ProgramaCompleto S;
 
+non terminal ArrayDeque<Tipo_Id> ARGUMENTOS_INI, ARGUMENTOS;
+
+non terminal ArrayDeque<Expresion> ARGUMENTOSPROC_INI, ARGUMENTOSPROC;
+
 //1 PROGRAMA COMPLETO (SOlO CUERPO PARA TEST)
 CUER ::= INST:inst CUER:lista_inst
 {:lista_inst.addInstr(inst); RESULT = lista_inst;:};
@@ -168,6 +172,10 @@ INST ::= INST_DECL:op1
 {:RESULT = op1;:};
 INST ::= INST_DECLASIG:op1
 {:RESULT = op1;:};
+INST ::= INST_DECL_FUN:op1
+{:RESULT = op1;:};
+INST ::= INST_CALL_PROC:op1
+{:RESULT = op1;:};
 
 //IF
 INST_IF ::= IF PARAPERTURA Exp0: cond PARCIERRE LLAVEAPERTURA CUER: cif LLAVECIERRE
@@ -199,6 +207,49 @@ INST_DECL ::= Tip: t Ident: id
 //DECLARACION CON ASIGNACION
 INST_DECLASIG ::= Tip: t Ident: id IGUAL Exp0: exp
 {: RESULT = new InstruccionDeclaracion(t,id,exp); :};
+
+//ARGUMENTOS FUNCION
+ARGUMENTOS_INI ::= Tip: t Ident: id ARGUMENTOS: arg
+{: arg.addFirst(new Tipo_Id(t, id)); RESULT = arg; :};
+
+ARGUMENTOS_INI ::= Tip: t AMPERSAND Ident: id ARGUMENTOS: arg
+{: arg.addFirst(new Tipo_Id(t, id)); RESULT = arg; :};
+
+ARGUMENTOS_INI ::= 
+{: RESULT = new ArrayDeque<Tipo_Id>(); :};
+
+ARGUMENTOS ::= COMA Tip: t Ident: id ARGUMENTOS: arg
+{: arg.addFirst(new Tipo_Id(t, id)); RESULT = arg; :};
+
+ARGUMENTOS ::= COMA Tip: t AMPERSAND Ident: id ARGUMENTOS: arg
+{: arg.addFirst(new Tipo_Id(t, id)); RESULT = arg; :};
+
+ARGUMENTOS ::= 
+{: RESULT = new ArrayDeque<Tipo_Id>(); :};
+
+//DECLARACION DE FUNCION
+INST_DECL_FUN ::= FUNCTION Tip: tipo_dev Ident: id PARAPERTURA ARGUMENTOS_INI: arg PARCIERRE LLAVEAPERTURA CUER: c LLAVECIERRE
+{: RESULT = new InstruccionDeclFuncion(tipo_dev, id, arg, c); :};
+
+INST_DECL_FUN ::= FUNCTION VOID Ident: id PARAPERTURA ARGUMENTOS_INI: arg PARCIERRE LLAVEAPERTURA CUER: c LLAVECIERRE
+{: RESULT = new InstruccionDeclFuncion(null, id, arg, c); :};
+
+//ARGUMENTOS LLAMADA PROCEDIMIENTO
+ARGUMENTOSPROC_INI ::= Exp0: e ARGUMENTOSPROC: arg
+{: arg.addFirst(e); RESULT = arg; :};
+
+ARGUMENTOSPROC_INI ::= 
+{: RESULT = new ArrayDeque<Expresion>(); :};
+
+ARGUMENTOSPROC ::= COMA Exp0: e ARGUMENTOSPROC: arg
+{: arg.addFirst(e); RESULT = arg; :};
+
+ARGUMENTOSPROC ::= 
+{: RESULT = new ArrayDeque<Expresion>(); :};
+
+//LLAMADA A FUNCION (PROCEDIMIENTO)
+INST_CALL_PROC ::= Ident: id PARAPERTURA ARGUMENTOSPROC_INI: arg PARCIERRE
+{: RESULT = new InstruccionLlamadaFuncion(id, arg); :};
 
 //IDENTIFICADORES
 
