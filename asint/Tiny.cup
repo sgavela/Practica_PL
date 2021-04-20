@@ -65,11 +65,12 @@ non terminal Instruccion INST, INST_IF, INST_IFELSE, INST_WHILE,
              INST_STRUCT, INST_DECL_FUN, 
              INST_CALL_PROC;
 
+non terminal ArrayDeque<Instruccion> CAMPOS_STRUCT;
+
 non terminal Cuerpo CUER;
 
 non terminal Tipo Tip;
 
-non terminal ProgramaCompleto S;
 
 //1 PROGRAMA COMPLETO (SOlO CUERPO PARA TEST)
 CUER ::= INST:inst CUER:lista_inst
@@ -141,6 +142,8 @@ Exp7 ::= TRUE
         {: RESULT = as.bool_true(); :};
 Exp7 ::= FALSE
         {: RESULT = as.bool_false(); :};
+Exp7 ::= Ident : id
+        {: RESULT = id; :};
         
 //3 INSTRUCCIONES
 
@@ -155,6 +158,8 @@ INST ::= INST_FOR:op1
 INST ::= INST_ASIG:op1
 {:RESULT = op1;:};
 INST ::= INST_DECL:op1
+{:RESULT = op1;:};
+INST ::= INST_STRUCT:op1
 {:RESULT = op1;:};
 
 //IF
@@ -183,6 +188,16 @@ INST_DECL ::= Tip: t Ident: id
 
 INST_DECL ::= Tip: t Ident: id IGUAL Exp0: exp
 {: RESULT = new InstruccionDeclaracion(t,id,exp); :};
+
+// DECLARACION DE STRUCTS
+INST_STRUCT ::= STRUCT:struct Ident:nombre LLAVEAPERTURA CAMPOS_STRUCT:lista LLAVECIERRE 
+{:RESULT = new InstruccionDeclStruct(nombre, lista);:};
+		
+//No terminales auxiliares para la declaracion de struct: implementamos la lista de declaraciones
+CAMPOS_STRUCT ::= INST_DECL:decl CAMPOS_STRUCT:lista
+{:lista.add(decl); RESULT = lista;:};
+CAMPOS_STRUCT ::= 
+{:RESULT = new ArrayDeque<Instruccion>();:};
 
 //IDENTIFICADORES
 

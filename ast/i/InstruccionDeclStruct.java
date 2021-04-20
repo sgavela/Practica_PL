@@ -6,11 +6,11 @@ import java.util.ArrayDeque;
 
 public class InstruccionDeclStruct extends Instruccion {
     private Id id;
-    private ArrayDeque<Tipo_Id> campos;
+    private ArrayDeque<Instruccion> declaraciones;
     
-    public InstruccionDeclStruct(Id id, ArrayDeque<Tipo_Id> campos) {
+    public InstruccionDeclStruct(Id id, ArrayDeque<Instruccion> declaraciones) {
         this.id = id;
-        this.campos = campos;
+        this.declaraciones = declaraciones;
     }
     
     public TipoInstruccion getTipo() {
@@ -18,12 +18,13 @@ public class InstruccionDeclStruct extends Instruccion {
     }
     
     public String toString() {
-        String s = "{{Struct}{";
-        for(Tipo_Id t_i: campos) {
-            s += t_i.getTipo().toString() + ' ' + t_i.getNombre().toString() + ',';
+        String aux = "{{_Stru__}";
+        
+        for(Instruccion declaracion : declaraciones) {
+            aux += declaracion.toString();
         }
-        s = s.substring(0,s.length()-1);
-        s += "}}";
-        return s;
+        aux += "}";
+        
+        return aux;
     }
 }
