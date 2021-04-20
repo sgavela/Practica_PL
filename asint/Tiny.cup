@@ -55,6 +55,14 @@ terminal     TYPEDEF, STRUCT,
              COMA, PUNTOCOMA, DOSPUNTOS, PUNTO,
              ASTERISCO, AMPERSAND, BARRABAJA;
 
+non terminal ProgramaCompleto PROG_COMP;
+
+non terminal Cabecera CABECERA;
+
+non terminal CuerpoMain CUERPO_MAIN;
+
+non terminal Cuerpo CUER;
+
 non terminal Expresion Exp0, Exp1, Exp2, Exp3, 
 			 Exp4, Exp5, Exp6, Exp7, Exp8;
 
@@ -71,23 +79,63 @@ non terminal InstruccionDeclStruct INST_STRUCT;
 non terminal InstruccionDeclFuncion INST_DECL_FUN; 
 non terminal InstruccionLlamadaFuncion INST_CALL_PROC;
 
-non terminal Cuerpo CUER;
+non terminal ExpresionLlamadaFuncion EXPR_LLAM_FUN;
 
 non terminal Tipo Tip;
-
-non terminal ProgramaCompleto S;
 
 non terminal ArrayDeque<Tipo_Id> ARGUMENTOS_INI, ARGUMENTOS;
 
 non terminal ArrayDeque<Expresion> ARGUMENTOSPROC_INI, ARGUMENTOSPROC;
 
-//1 PROGRAMA COMPLETO (SOlO CUERPO PARA TEST)
-CUER ::= INST:inst CUER:lista_inst
-{:lista_inst.addInstr(inst); RESULT = lista_inst;:};
-CUER   ::= 
-{:RESULT= new Cuerpo();:};
+//1 PROGRAMA COMPLETO
+PROG_COMP ::= CABECERA: cab MAIN LLAVEAPERTURA CUERPO_MAIN: c_main LLAVECIERRE
+{: RESULT = new ProgramaCompleto(cab, c_main); :};
 
-//2 EXPRESIONES
+//2 CABECERA
+CABECERA ::= INST_DECL_FUN: inst PUNTOCOMA CABECERA: cab
+{: cab.addInstr(inst); RESULT = cab; :};
+
+CABECERA ::= INST_DECLASIG: inst PUNTOCOMA CABECERA: cab
+{: cab.addInstr(inst); RESULT = cab; :};
+
+CABECERA ::= INST_DECL: inst PUNTOCOMA CABECERA: cab
+{: cab.addInstr(inst); RESULT = cab; :};
+
+CABECERA ::= INST_ASIG: inst PUNTOCOMA CABECERA: cab
+{: cab.addInstr(inst); RESULT = cab; :};
+
+CABECERA ::=
+{: RESULT = new Cabecera(); :};
+
+// MAIN
+CUERPO_MAIN ::= INST_DECLASIG: inst PUNTOCOMA CUERPO_MAIN: c_main
+{: c_main.addInstr(inst); RESULT = c_main; :};
+
+CUERPO_MAIN ::= INST_DECL: inst PUNTOCOMA CUERPO_MAIN: c_main
+{: c_main.addInstr(inst); RESULT = c_main; :};
+
+CUERPO_MAIN ::= INST_ASIG: inst PUNTOCOMA CUERPO_MAIN: c_main
+{: c_main.addInstr(inst); RESULT = c_main; :};
+
+CUERPO_MAIN ::= INST_CALL_PROC: inst PUNTOCOMA CUERPO_MAIN: c_main
+{: c_main.addInstr(inst); RESULT = c_main; :};
+
+CUERPO_MAIN ::= INST_FOR: inst CUERPO_MAIN: c_main
+{: c_main.addInstr(inst); RESULT = c_main; :};
+
+CUERPO_MAIN ::= INST_IF: inst CUERPO_MAIN: c_main
+{: c_main.addInstr(inst); RESULT = c_main; :};
+
+CUERPO_MAIN ::= INST_IFELSE: inst CUERPO_MAIN: c_main 
+{: c_main.addInstr(inst); RESULT = c_main; :};
+
+CUERPO_MAIN ::= INST_WHILE: inst CUERPO_MAIN: c_main
+{: c_main.addInstr(inst); RESULT = c_main; :};
+
+CUERPO_MAIN ::=
+{: RESULT = new CuerpoMain(); :};
+
+//3 EXPRESIONES
 
 //OR
 Exp0 ::= Exp0: exp1 OR Exp1: exp2
@@ -155,8 +203,12 @@ Exp7 ::= FALSE
 //CASO BASE IDENTIFICADORES
 Exp7 ::= Ident: id
         {: RESULT = id; :};
-        
-//3 INSTRUCCIONES
+
+//CASO BASE LLAMADA FUNCION
+Exp7 ::= EXPR_LLAM_FUN: llam_fun
+{: RESULT = llam_fun; :};
+
+//4 INSTRUCCIONES
 
 INST ::= INST_IF:op1
 {:RESULT = op1;:};
@@ -176,6 +228,34 @@ INST ::= INST_DECL_FUN:op1
 {:RESULT = op1;:};
 INST ::= INST_CALL_PROC:op1
 {:RESULT = op1;:};
+
+// CUERPO
+CUER ::= INST_DECLASIG: inst PUNTOCOMA CUER: c
+{: c.addInstr(inst); RESULT = c; :};
+
+CUER ::= INST_DECL: inst PUNTOCOMA CUER: c
+{: c.addInstr(inst); RESULT = c; :};
+
+CUER ::= INST_ASIG: inst PUNTOCOMA CUER: c
+{: c.addInstr(inst); RESULT = c; :};
+
+CUER ::= INST_CALL_PROC: inst PUNTOCOMA CUER: c
+{: c.addInstr(inst); RESULT = c; :};
+
+CUER ::= INST_FOR: inst CUER: c
+{: c.addInstr(inst); RESULT = c; :};
+
+CUER ::= INST_IF: inst CUER: c
+{: c.addInstr(inst); RESULT = c; :};
+
+CUER ::= INST_IFELSE: inst CUER: c 
+{: c.addInstr(inst); RESULT = c; :};
+
+CUER ::= INST_WHILE: inst CUER: c
+{: c.addInstr(inst); RESULT = c; :};
+
+CUER ::=
+{: RESULT = new Cuerpo(); :}; 
 
 //IF
 INST_IF ::= IF PARAPERTURA Exp0: cond PARCIERRE LLAVEAPERTURA CUER: cif LLAVECIERRE
@@ -252,11 +332,14 @@ INST_CALL_PROC ::= Ident: id PARAPERTURA ARGUMENTOSPROC_INI: arg PARCIERRE
 {: RESULT = new InstruccionLlamadaFuncion(id, arg); :};
 
 //IDENTIFICADORES
-
 Ident ::= IDEN: id
 {: RESULT = new Id(id); :};
 
-//TIPOS
+//EXPRESION LLAMADA A FUNCION
+EXPR_LLAM_FUN ::= Ident: id PARAPERTURA ARGUMENTOSPROC_INI: arg PARCIERRE
+{: RESULT = new ExpresionLlamadaFuncion(id, arg); :};
+
+//5 TIPOS
 
 Tip ::= INTEGER
 {: RESULT = new Tipo(Tipos.INTEGER); :};

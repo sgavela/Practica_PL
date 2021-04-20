@@ -9,13 +9,12 @@ import java.util.ArrayDeque;
 
 public class ExpresionLlamadaFuncion extends Expresion {
     private Id id;
-    private ArrayDeque<Tipo_Id> argumentos;
+    private ArrayDeque<Expresion> argumentos;
     private Tipo tipo;
     
-   public ExpresionLlamadaFuncion(Id id, ArrayDeque<Tipo_Id> argumentos, Tipo tipo) {
+   public ExpresionLlamadaFuncion(Id id, ArrayDeque<Expresion> argumentos) {
        this.id = id;
        this.argumentos = argumentos;
-       this.tipo = tipo;
    }
    
    public Expresiones tipo() {
@@ -24,8 +23,8 @@ public class ExpresionLlamadaFuncion extends Expresion {
    
    public String toString() {
        String s = "{{_LlamadaFunc_}{" + id.toString() + ',' + '{';
-       for(Tipo_Id arg: argumentos) {
-           s += arg.getNombre().toString() + ',';
+       for(Expresion arg: argumentos) {
+           s += arg.toString() + ',';
        }
        s = s.substring(0, s.length()-1);
        s += "}}}";
