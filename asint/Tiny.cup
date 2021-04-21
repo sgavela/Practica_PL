@@ -218,6 +218,10 @@ Tip ::= LIST MENOR Tip: t COMA NUM: n MAYOR
 Tip ::= Tip: t ASTERISCO
 {: RESULT = new TipoPuntero(t); :};
 
+TIPO_ARRAY ::= 
+{:RESULT = null;:};
+TIPO_ARRAY ::= CORCHAPERTURA:ca E0:dimension CORCHCIERRE TIPO_ARRAY:tipoArray
+{:RESULT = new TipoArray(tipoArray, dimension, ca.getFila(), ca.getColumna());:};
 
 
 
