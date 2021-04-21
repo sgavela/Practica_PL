@@ -15,7 +15,7 @@ public class CuerpoMain {
     }
     
     public void addInstr(Instruccion instr) {
-        instrucciones.add(instr);
+        instrucciones.addFirst(instr);
     }
     
     public String toString() {

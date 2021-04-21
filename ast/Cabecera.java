@@ -15,7 +15,7 @@ public class Cabecera {
     }
     
     public void addInstr(Instruccion instruccion) {
-        instrucciones.add(instruccion);
+        instrucciones.addFirst(instruccion);
     }
     
     public String toString() {

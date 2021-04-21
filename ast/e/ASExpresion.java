@@ -24,7 +24,7 @@ public class ASExpresion {
       public Expresion bool_true() {return new Boolean("true");}
       public Expresion bool_false() {return new Boolean("false");}
       public Expresion num(String n) {return new Number(n);}
-      public Expresion fun(Id id, ArrayDeque<Tipo_Id> args, Tipo tipo) {return new ExpresionLlamadaFuncion(id, args, tipo);}
+      public Expresion fun(Id id, ArrayDeque<Expresion> args) {return new ExpresionLlamadaFuncion(id, args);}
       public Expresion crea_iden(String id) {return new Id(id);}
      
 
