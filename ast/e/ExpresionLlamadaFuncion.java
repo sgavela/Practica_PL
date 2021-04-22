@@ -38,6 +38,7 @@ public class ExpresionLlamadaFuncion extends Expresion {
     for(Expresion arg: argumentos) {
         s += b_prof + "   |---Argumento: " + arg.toString(prof+1,niveles) + '\n';
     }
+    s = s.substring(0, s.length()-1);
     niveles.set(prof,false);
     return s;
    }

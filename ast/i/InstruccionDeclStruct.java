@@ -7,11 +7,11 @@ import java.util.ArrayList;
 
 public class InstruccionDeclStruct extends Instruccion {
     private Id id;
-    private ArrayDeque<Tipo_Id> campos;
+    private ArrayDeque<Instruccion> declaraciones;
     
-    public InstruccionDeclStruct(Id id, ArrayDeque<Tipo_Id> campos) {
+    public InstruccionDeclStruct(Id id, ArrayDeque<Instruccion> declaraciones) {
         this.id = id;
-        this.campos = campos;
+        this.declaraciones = declaraciones;
     }
     
     public TipoInstruccion getTipo() {
@@ -19,12 +19,22 @@ public class InstruccionDeclStruct extends Instruccion {
     }
     
     public String toString(int prof, ArrayList<Boolean> niveles) {
-        String s = "{{Struct}{";
-        for(Tipo_Id t_i: campos) {
-            s += t_i.getTipo().toString() + ' ' + t_i.getNombre().toString() + ',';
+        String s = "";
+        String b_prof = "";
+        if(niveles.size() == prof) niveles.add(true);
+        else niveles.set(prof,true);
+        for(int i=0; i<prof-1; ++i){
+            if(niveles.get(i)) b_prof += '|';
+            b_prof += "   ";
         }
-        s = s.substring(0,s.length()-1);
-        s += "}}";
+        b_prof += '|';
+        s += b_prof + "---" + "{Struct}\n";
+        if(niveles.size() == prof+1) niveles.add(true);
+        else niveles.set(prof+1,true);
+        for(Instruccion declaracion : declaraciones) {
+            s += declaracion.toString(prof+1,niveles);
+        }
+        niveles.set(prof,false);
         return s;
     }
 }

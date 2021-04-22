@@ -1,21 +1,18 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package ast.e;
 
 import ast.t.Tipo;
+import java.util.ArrayList;
 
-/**
- *
- * @author Usuario
- */
 public class ListIndex extends Expresion {
     private Id id;
     private Expresion idx;
     private Tipo tipoLista;
     
+    public ListIndex(Id id, Expresion idx) {
+        this.id = id;
+        this.idx = idx;
+        this.tipoLista = null;
+    }
     
     public ListIndex(Id id, Expresion idx, Tipo tipoLista) {
         this.id = id;
@@ -24,6 +21,11 @@ public class ListIndex extends Expresion {
     }
     
     public String toString() {
+        String s = id.toString() + '[' + idx.toString() + ']';
+        return s;
+    }
+
+    public String toString(int prof, ArrayList<Boolean> niveles) {
         String s = id.toString() + '[' + idx.toString() + ']';
         return s;
     }

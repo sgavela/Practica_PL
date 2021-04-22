@@ -1,21 +1,21 @@
 package ast.t;
 
 public class TipoLista extends Tipo{
-    private Tipo tipoLista; 
+    private Tipo tipoDeLaLista; 
     private int tam;
     
-    public TipoLista(Tipo tipo, String n) {
+    public TipoLista(Tipo tipoDeLaLista, String n) {
         super(Tipos.LIST);
-        this.tipoLista = tipoLista;
+        this.tipoDeLaLista = tipoDeLaLista;
         this.tam = Integer.parseInt(n);
     }
     
-    public Tipo getTipoLista(){
-         return this.tipoLista;
+    public Tipo getTipoDeLaLista(){
+         return this.tipoDeLaLista;
      }
 
     public String toString() {
-        return "vector<" + tipoLista.toString() + ',' + tam + '>';
+        return "vector<" + tipoDeLaLista.toString() + ',' + tam + '>';
     }
     
     public int length(){
