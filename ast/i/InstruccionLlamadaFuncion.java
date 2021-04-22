@@ -9,6 +9,7 @@ import ast.t.Tipo_Id;
 
 import java.beans.Expression;
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 
 public class InstruccionLlamadaFuncion extends Instruccion {
     private Id id;
@@ -31,13 +32,24 @@ public class InstruccionLlamadaFuncion extends Instruccion {
        return TipoInstruccion.LLAMFUN;
    }
    
-   public String toString() {
-       String s = "{{_LlamadaFunc_}{" + id.toString() + ',' + '{';
-       for(Expresion arg: argumentos) {
-           s += arg.toString() + ',';
+   public String toString(int prof, ArrayList<Boolean> niveles) {
+       String s = "";
+       String b_prof = "";
+       if(niveles.size()==prof) niveles.add(true);
+       else niveles.set(prof,true);
+       for(int i=0; i<prof-1; ++i){
+           if(niveles.get(i)) b_prof += '|';
+           b_prof += "   ";
        }
-       s = s.substring(0, s.length()-1);
-       s += "}}}";
+       b_prof += '|';
+       s += b_prof +  "---{Llamada funcion}\n";
+       if(niveles.size()==prof+1) niveles.add(false);
+       else niveles.set(prof+1,false);
+       s += b_prof + "   |---Identificador: " + id.toString(prof+1,niveles) + '\n';
+       for(Expresion arg: argumentos) {
+           s += b_prof + "   |---Argumento: " + arg.toString(prof+1,niveles) + '\n';
+       }
+       niveles.set(prof,false);
        return s;
    }
     

@@ -4,6 +4,7 @@ import ast.e.Id;
 import ast.e.Expresion;
 import java.util.HashMap;
 import java.util.List;
+import java.util.ArrayList;
 
 public class InstruccionSwitch extends Instruccion {
     private Id exp_caso;
@@ -20,18 +21,18 @@ public class InstruccionSwitch extends Instruccion {
         return TipoInstruccion.SWITCH;
     }
     
-    public String toString() {
+    public String toString(int prof, ArrayList<Boolean> niveles) {
         String s = "{{_Switch_}{" + exp_caso.toString() + "}{";
         for(Expresion exp: casos.keySet()) {
             s += "{_Caso_}{" + exp.toString() + "}{";
             for(Instruccion inst: casos.get(exp).getInstr()) {
-                s += inst.toString();
+                s += inst.toString(prof+1, niveles);
             }
             s += "}";
         }
         s += "{_Default_}{";
         for(Instruccion inst: cuerpo_default.getInstr()) {
-            s += inst.toString();
+            s += inst.toString(prof+1, niveles);
         }
         s += "}}";
         return s;

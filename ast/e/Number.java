@@ -2,6 +2,7 @@ package ast.e;
 
 import ast.t.Tipo;
 import ast.t.Tipos;
+import java.util.ArrayList;
 
 public class Number extends Expresion {
 	
@@ -20,6 +21,10 @@ public class Number extends Expresion {
     }
     
     public String toString() {
+        return s;
+    }
+
+    public String toString(int prof, ArrayList<Boolean> niveles) {
         return s;
     }
     

@@ -3,6 +3,7 @@ package ast.i;
 import ast.e.Id;
 import ast.t.Tipo_Id;
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 
 public class InstruccionDeclStruct extends Instruccion {
     private Id id;
@@ -17,14 +18,23 @@ public class InstruccionDeclStruct extends Instruccion {
         return TipoInstruccion.DECLSTRUCT;
     }
     
-    public String toString() {
-        String aux = "{{_Stru__}";
-        
-        for(Instruccion declaracion : declaraciones) {
-            aux += declaracion.toString();
+    public String toString(int prof, ArrayList<Boolean> niveles) {
+        String s = "";
+        String b_prof = "";
+        if(niveles.size() == prof) niveles.add(true);
+        else niveles.set(prof,true);
+        for(int i=0; i<prof-1; ++i){
+            if(niveles.get(i)) b_prof += '|';
+            b_prof += "   ";
         }
-        aux += "}";
-        
-        return aux;
+        b_prof += '|';
+        s += b_prof + "---" + "{Struct}\n";
+        if(niveles.size() == prof+1) niveles.add(true);
+        else niveles.set(prof+1,true);
+        for(Instruccion declaracion : declaraciones) {
+            s += declaracion.toString(prof+1,niveles);
+        }
+        niveles.set(prof,false);
+        return s;
     }
 }

@@ -1,12 +1,21 @@
+int i = 1;
+typedef int edad;
+fun int mi_funcion(int a, int b){
+    int sol = a + b;
+    return sol;
+}
 main {
     bool j = false;
     int k = 3;
     if(true){
         int i = 2 + 1;
     }
-
+    mi_funcion(3, 2);
     int p = 2;
-    for(int i = 0;i < 10;i = i + 1){
-        p = i + 1;
+    while(i<10){
+        p = 3/2 + i;
+    }
+    for(int i = 0; i<3; i = i + 1){
+        p = mi_funcion(p,i);
     }
 }
