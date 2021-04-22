@@ -1,1 +1,2 @@
 vector<vector<int, 3>, 4> m;
+vector<vector<int, 3>, 2> m = {{4, 5, 6}, {7, 8, 9}};

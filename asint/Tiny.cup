@@ -317,7 +317,7 @@ INST_DECL ::= Tip: t Ident: id
 INST_DECLASIG ::= Tip: t Ident: id IGUAL Exp0: exp
 {: RESULT = new InstruccionDeclaracion(t,id,exp); :};
 
-//VECTORES
+//DECLARACION VECTORES (siempre hay que inicializar)
 INST_DECL_VECTOR  ::= Tip_vect: t Ident: id IGUAL LLAVEAPERTURA LIST_VAL:list LLAVECIERRE
 {: RESULT = new InstruccionDeclVector(t.getTipoDeLaLista(),id,t.length(),list);:};
 LIST_VAL  ::= Exp0:val
