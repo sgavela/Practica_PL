@@ -1,6 +1,7 @@
 package ast.e;
 
 import ast.t.Tipo;
+import java.util.ArrayList;
 
 public class Id extends Expresion{
 	private String s;
@@ -19,6 +20,10 @@ public class Id extends Expresion{
     }
     
     public String toString() {
+        return s;
+    }
+
+    public String toString(int prof, ArrayList<Boolean> niveles) {
         return s;
     }
 }

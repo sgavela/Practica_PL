@@ -21,8 +21,8 @@ public class ASExpresion {
       public Expresion leq(Expresion opnd1, Expresion opnd2) {return new ExpresionBin(opnd1,opnd2, Expresiones.LEQ);}
       public Expresion geq(Expresion opnd1, Expresion opnd2) {return new ExpresionBin(opnd1,opnd2, Expresiones.GEQ);}
       
-      public Expresion bool_true() {return new Boolean("true");}
-      public Expresion bool_false() {return new Boolean("false");}
+      public Expresion bool_true() {return new Booleano("true");}
+      public Expresion bool_false() {return new Booleano("false");}
       public Expresion num(String n) {return new Number(n);}
       public Expresion fun(Id id, ArrayDeque<Expresion> args) {return new ExpresionLlamadaFuncion(id, args);}
       public Expresion crea_iden(String id) {return new Id(id);}

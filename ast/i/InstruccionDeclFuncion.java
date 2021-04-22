@@ -4,6 +4,7 @@ import ast.e.Id;
 import ast.t.Tipo;
 import ast.t.Tipo_Id;
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 
 public class InstruccionDeclFuncion extends Instruccion {
     private Tipo tipo;
@@ -22,17 +23,36 @@ public class InstruccionDeclFuncion extends Instruccion {
         return TipoInstruccion.DECLFUN;
     }
     
-    public String toString() {
-        String s = "{{_fun_}{";
+    public String toString(int prof, ArrayList<Boolean> niveles) {
+        String s = "";
+        String b_prof = "";
+        if(niveles.size()==prof) niveles.add(true);
+        else niveles.set(prof,true);
+        for(int i=0; i<prof-1; ++i){
+            if(niveles.get(i)) b_prof += '|';
+            b_prof += "   ";
+        }
+        b_prof += '|';
+        s += b_prof + "---{Declaracion funcion}\n";
+        if(tipo == null) {
+            s += b_prof + "   |---Tipo: " + "VOID" + '\n';
+        }
+        else {
+            s += b_prof + "   |---Tipo: " + tipo.toString() + '\n';
+        }
+        s += b_prof + "   |---Identificador: " + id.toString() + '\n'; 
         for(Tipo_Id arg: argumentos){
-            s += arg.getTipo().toString() + ' ' + arg.getNombre().toString() + ',';
+            s += b_prof + "   |---Argumento: \n" + b_prof + "   |   |---Tipo: " + arg.getTipo().toString() + '\n';
+            s += b_prof  + "   |   |---Identificador: " + arg.getNombre().toString() + '\n';
         }
-        s = s.substring(0, s.length()-1);
-        s += "}{" + tipo.toString() + "}{";
+        if(niveles.size() == prof+1) niveles.add(true);
+        else niveles.set(prof+1,true);
+        s += b_prof + "   |---{Cuerpo}\n";
         for(Instruccion inst: cuerpo.getInstr()) {
-            s += inst.toString();
+            s += inst.toString(prof+2, niveles);
         }
-        s += "}}";
+        niveles.set(prof+1,false);
+        niveles.set(prof,false);
         return s;
     }
     

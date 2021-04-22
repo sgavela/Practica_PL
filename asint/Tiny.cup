@@ -61,7 +61,7 @@ non terminal Cabecera CABECERA;
 
 non terminal CuerpoMain CUERPO_MAIN;
 
-non terminal Cuerpo CUER;
+non terminal Cuerpo CUER, CUER_FUN;
 
 non terminal Expresion Exp0, Exp1, Exp2, Exp3, 
 			 Exp4, Exp5, Exp6, Exp7, Exp8;
@@ -94,7 +94,7 @@ PROG_COMP ::= CABECERA: cab MAIN LLAVEAPERTURA CUERPO_MAIN: c_main LLAVECIERRE
 {: RESULT = new ProgramaCompleto(cab, c_main); :};
 
 //2 CABECERA
-CABECERA ::= INST_DECL_FUN: inst PUNTOCOMA CABECERA: cab
+CABECERA ::= INST_DECL_FUN: inst CABECERA: cab
 {: cab.addInstr(inst); RESULT = cab; :};
 
 CABECERA ::= INST_DECLASIG: inst PUNTOCOMA CABECERA: cab
@@ -315,8 +315,39 @@ ARGUMENTOS ::= COMA Tip: t AMPERSAND Ident: id ARGUMENTOS: arg
 ARGUMENTOS ::= 
 {: RESULT = new ArrayDeque<Tipo_Id>(); :};
 
+// CUERPO FUNCION
+CUER_FUN ::= INST_DECLASIG: inst PUNTOCOMA CUER_FUN: c
+{: c.addInstr(inst); RESULT = c; :};
+
+CUER_FUN ::= INST_DECL: inst PUNTOCOMA CUER_FUN: c
+{: c.addInstr(inst); RESULT = c; :};
+
+CUER_FUN ::= INST_ASIG: inst PUNTOCOMA CUER_FUN: c
+{: c.addInstr(inst); RESULT = c; :};
+
+CUER_FUN ::= INST_CALL_PROC: inst PUNTOCOMA CUER_FUN: c
+{: c.addInstr(inst); RESULT = c; :};
+
+CUER_FUN ::= INST_FOR: inst CUER_FUN: c
+{: c.addInstr(inst); RESULT = c; :};
+
+CUER_FUN ::= INST_IF: inst CUER_FUN: c
+{: c.addInstr(inst); RESULT = c; :};
+
+CUER_FUN ::= INST_IFELSE: inst CUER_FUN: c 
+{: c.addInstr(inst); RESULT = c; :};
+
+CUER_FUN ::= INST_WHILE: inst CUER_FUN: c
+{: c.addInstr(inst); RESULT = c; :};
+
+CUER_FUN ::= INST_RETURN: inst PUNTOCOMA CUER_FUN: c
+{: c.addInstr(inst); RESULT = c; :};
+
+CUER_FUN ::=
+{: RESULT = new Cuerpo(); :}; 
+
 //DECLARACION DE FUNCION
-INST_DECL_FUN ::= FUNCTION Tip: tipo_dev Ident: id PARAPERTURA ARGUMENTOS_INI: arg PARCIERRE LLAVEAPERTURA CUER: c INST_RETURN PUNTOCOMA LLAVECIERRE
+INST_DECL_FUN ::= FUNCTION Tip: tipo_dev Ident: id PARAPERTURA ARGUMENTOS_INI: arg PARCIERRE LLAVEAPERTURA CUER_FUN: c LLAVECIERRE
 {: RESULT = new InstruccionDeclFuncion(tipo_dev, id, arg, c); :};
 
 INST_DECL_FUN ::= FUNCTION VOID Ident: id PARAPERTURA ARGUMENTOS_INI: arg PARCIERRE LLAVEAPERTURA CUER: c LLAVECIERRE

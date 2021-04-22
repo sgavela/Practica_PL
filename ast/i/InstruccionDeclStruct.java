@@ -3,6 +3,7 @@ package ast.i;
 import ast.e.Id;
 import ast.t.Tipo_Id;
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 
 public class InstruccionDeclStruct extends Instruccion {
     private Id id;
@@ -17,7 +18,7 @@ public class InstruccionDeclStruct extends Instruccion {
         return TipoInstruccion.DECLSTRUCT;
     }
     
-    public String toString() {
+    public String toString(int prof, ArrayList<Boolean> niveles) {
         String s = "{{Struct}{";
         for(Tipo_Id t_i: campos) {
             s += t_i.getTipo().toString() + ' ' + t_i.getNombre().toString() + ',';

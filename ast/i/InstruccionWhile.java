@@ -1,6 +1,7 @@
 package ast.i;
 
 import ast.e.Expresion;
+import java.util.ArrayList;
 
 public class InstruccionWhile extends Instruccion {
     private Expresion condicion;
@@ -15,12 +16,26 @@ public class InstruccionWhile extends Instruccion {
         return TipoInstruccion.WHILE;
     }
     
-    public String toString() {
-        String s = "{{ While }{" + condicion.toString() + "}{";
-        for(Instruccion inst: cuerpo_while.getInstr()) {
-            s += inst.toString();
+    public String toString(int prof, ArrayList<Boolean> niveles) {
+        String s = "";
+        String b_prof = "";
+        if(niveles.size()==prof) niveles.add(true);
+        else niveles.set(prof,true);
+        for(int i=0; i<prof-1; ++i){
+            if(niveles.get(i)) b_prof += '|';
+            b_prof += "   ";
         }
-        s += "}}";
+        b_prof += '|';
+        s += b_prof + "---{While}\n";
+        s += b_prof + "   " + "|" + "---" + "Condicion: " + condicion.toString(prof+1,niveles) + "\n";
+        if(niveles.size() == prof+1) niveles.add(true);
+        else niveles.set(prof+1,true);
+        s += b_prof + "   " + "|" + "---" + "{Cuerpo}\n";
+        for(Instruccion inst: cuerpo_while.getInstr()) {
+            s += inst.toString(prof+2, niveles);
+        }
+        niveles.set(prof+1,false);
+        niveles.set(prof,false);
         return s;
     }
     
