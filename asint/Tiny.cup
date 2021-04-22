@@ -75,6 +75,7 @@ non terminal InstruccionSwitch INST_SWITCH;
 non terminal InstruccionFor INST_FOR;
 non terminal InstruccionAsignacion INST_ASIG;
 non terminal InstruccionDeclaracion INST_DECL, INST_DECLASIG; 
+non terminal InstruccionDeclVector INST_DECL_VECTOR;
 non terminal InstruccionDeclStruct INST_STRUCT;
 non terminal InstruccionDeclFuncion INST_DECL_FUN; 
 non terminal InstruccionLlamadaFuncion INST_CALL_PROC;
@@ -84,10 +85,11 @@ non terminal InstruccionTypedef INST_TYPEDEF;
 non terminal ExpresionLlamadaFuncion EXPR_LLAM_FUN;
 
 non terminal Tipo Tip;
+non terminal TipoLista Tip_vect;
 
 non terminal ArrayDeque<Tipo_Id> ARGUMENTOS_INI, ARGUMENTOS;
 
-non terminal ArrayDeque<Expresion> ARGUMENTOSPROC_INI, ARGUMENTOSPROC;
+non terminal ArrayDeque<Expresion> ARGUMENTOSPROC_INI, ARGUMENTOSPROC, LIST_VAL;
 
 non terminal ArrayDeque<Instruccion> CAMPOS_STRUCT;
 
@@ -103,6 +105,9 @@ CABECERA ::= INST_DECLASIG: inst PUNTOCOMA CABECERA: cab
 {: cab.addInstr(inst); RESULT = cab; :};
 
 CABECERA ::= INST_DECL: inst PUNTOCOMA CABECERA: cab
+{: cab.addInstr(inst); RESULT = cab; :};
+
+CABECERA ::= INST_DECL_VECTOR: inst PUNTOCOMA CABECERA: cab
 {: cab.addInstr(inst); RESULT = cab; :};
 
 CABECERA ::= INST_ASIG: inst PUNTOCOMA CABECERA: cab
@@ -122,6 +127,9 @@ CUERPO_MAIN ::= INST_DECLASIG: inst PUNTOCOMA CUERPO_MAIN: c_main
 {: c_main.addInstr(inst); RESULT = c_main; :};
 
 CUERPO_MAIN ::= INST_DECL: inst PUNTOCOMA CUERPO_MAIN: c_main
+{: c_main.addInstr(inst); RESULT = c_main; :};
+
+CUERPO_MAIN ::= INST_DECL_VECTOR: inst PUNTOCOMA CUERPO_MAIN: c_main
 {: c_main.addInstr(inst); RESULT = c_main; :};
 
 CUERPO_MAIN ::= INST_ASIG: inst PUNTOCOMA CUERPO_MAIN: c_main
@@ -249,6 +257,9 @@ CUER ::= INST_DECLASIG: inst PUNTOCOMA CUER: c
 CUER ::= INST_DECL: inst PUNTOCOMA CUER: c
 {: c.addInstr(inst); RESULT = c; :};
 
+CUER ::= INST_DECL_VECTOR: inst PUNTOCOMA CUER: c
+{: c.addInstr(inst); RESULT = c; :};
+
 CUER ::= INST_ASIG: inst PUNTOCOMA CUER: c
 {: c.addInstr(inst); RESULT = c; :};
 
@@ -300,6 +311,14 @@ INST_DECL ::= Tip: t Ident: id
 //DECLARACION CON ASIGNACION
 INST_DECLASIG ::= Tip: t Ident: id IGUAL Exp0: exp
 {: RESULT = new InstruccionDeclaracion(t,id,exp); :};
+
+//VECTORES
+INST_DECL_VECTOR  ::= Tip_vect: t Ident: id IGUAL LLAVEAPERTURA LIST_VAL:list LLAVECIERRE
+{: RESULT = new InstruccionDeclVector(t.getTipoDeLaLista(),id,t.length(),list);:};
+LIST_VAL  ::= Exp0:val
+{:ArrayDeque<Expresion> list = new ArrayDeque<Expresion>(); list.add(val); RESULT = list;:};
+LIST_VAL  ::=  LIST_VAL:list COMA Exp0:val 
+{:list.add(val); RESULT = list;:};
 
 //ARGUMENTOS FUNCION
 ARGUMENTOS_INI ::= Tip: t Ident: id ARGUMENTOS: arg
@@ -377,7 +396,10 @@ Tip ::= INTEGER
 Tip ::= BOOLEAN
 {: RESULT = new Tipo(Tipos.BOOLEAN); :};
 
-Tip ::= LIST MENOR Tip: t COMA NUM: n MAYOR
+Tip_vect ::= LIST MENOR Tip: t COMA NUM: n MAYOR
+{: RESULT = new TipoLista(t, n); :};
+
+Tip_vect ::= LIST MENOR Tip_vect: t COMA NUM: n MAYOR
 {: RESULT = new TipoLista(t, n); :};
 
 Tip ::= Ident : nombreStruct

@@ -16,4 +16,5 @@ main {
     }
     int f = sumar(p,c);
     Persona carlos;
+    vector<int, 4> v = {5, 6, 7, 8};
 }
