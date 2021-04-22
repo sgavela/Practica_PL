@@ -16,6 +16,11 @@ public class ListIndex extends Expresion {
     private Expresion idx;
     private Tipo tipoLista;
     
+    public ListIndex(Id id, Expresion idx) {
+        this.id = id;
+        this.idx = idx;
+        this.tipoLista = null;
+    }
     
     public ListIndex(Id id, Expresion idx, Tipo tipoLista) {
         this.id = id;
