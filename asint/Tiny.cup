@@ -89,6 +89,8 @@ non terminal ArrayDeque<Tipo_Id> ARGUMENTOS_INI, ARGUMENTOS;
 
 non terminal ArrayDeque<Expresion> ARGUMENTOSPROC_INI, ARGUMENTOSPROC;
 
+non terminal ArrayDeque<Instruccion> CAMPOS_STRUCT;
+
 //1 PROGRAMA COMPLETO
 PROG_COMP ::= CABECERA: cab MAIN LLAVEAPERTURA CUERPO_MAIN: c_main LLAVECIERRE
 {: RESULT = new ProgramaCompleto(cab, c_main); :};
@@ -107,6 +109,9 @@ CABECERA ::= INST_ASIG: inst PUNTOCOMA CABECERA: cab
 {: cab.addInstr(inst); RESULT = cab; :};
 
 CABECERA ::= INST_TYPEDEF: inst PUNTOCOMA CABECERA: cab
+{: cab.addInstr(inst); RESULT = cab; :};
+
+CABECERA ::= INST_STRUCT: inst PUNTOCOMA CABECERA: cab
 {: cab.addInstr(inst); RESULT = cab; :};
 
 CABECERA ::=
@@ -347,6 +352,15 @@ INST_CALL_PROC ::= Ident: id PARAPERTURA ARGUMENTOSPROC_INI: arg PARCIERRE
 INST_TYPEDEF ::= TYPEDEF Tip: tipo Ident: id
 {: RESULT = new InstruccionTypedef(tipo, id); :};
 
+//STRUCTS
+INST_STRUCT ::= STRUCT:struct Ident:nombre LLAVEAPERTURA CAMPOS_STRUCT:lista LLAVECIERRE 
+{:RESULT = new InstruccionDeclStruct(nombre, lista);:};
+
+CAMPOS_STRUCT ::= INST_DECL:decl PUNTOCOMA CAMPOS_STRUCT:lista
+{:lista.add(decl); RESULT = lista;:};
+CAMPOS_STRUCT ::= 
+{:RESULT = new ArrayDeque<Instruccion>();:};
+
 //IDENTIFICADORES
 Ident ::= IDEN: id
 {: RESULT = new Id(id); :};
@@ -365,6 +379,9 @@ Tip ::= BOOLEAN
 
 Tip ::= LIST MENOR Tip: t COMA NUM: n MAYOR
 {: RESULT = new TipoLista(t, n); :};
+
+Tip ::= Ident : nombreStruct
+{: RESULT = new TipoStruct(nombreStruct.getS()); :};
 
 Tip ::= Tip: t ASTERISCO
 {: RESULT = new TipoPuntero(t); :};

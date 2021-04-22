@@ -14,6 +14,10 @@ public class Id extends Expresion{
         return this.tipo;
     }
     
+    public String getS() {
+        return s;
+    }
+
     public Expresiones tipo() {
         return Expresiones.ID;
     }
