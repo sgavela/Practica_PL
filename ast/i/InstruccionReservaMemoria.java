@@ -1,6 +1,7 @@
 package ast.i;
 
 import ast.t.Tipo;
+import java.util.ArrayList;
 
 public class InstruccionReservaMemoria extends Instruccion {
     private Tipo tipo;
@@ -15,7 +16,7 @@ public class InstruccionReservaMemoria extends Instruccion {
         return TipoInstruccion.RESMEM;
     }
     
-    public String toString() {
+    public String toString(int prof, ArrayList<Boolean> niveles) {
         String s = "{{_Reserva_}{" + tipo + ',' + tam + "}}";
         return s;
     }

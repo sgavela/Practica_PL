@@ -2,6 +2,7 @@ package ast;
 
 import ast.i.Instruccion;
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 
 public class Cabecera {
     private ArrayDeque<Instruccion> instrucciones;
@@ -18,12 +19,13 @@ public class Cabecera {
         instrucciones.addFirst(instruccion);
     }
     
-    public String toString() {
-        String s = "{{_Cabecera_}{";
+    public String toString(int prof, ArrayList<Boolean> niveles) {
+        String s = "|---{Cabecera}\n";
+        niveles.add(true);
         for(Instruccion inst: instrucciones) {
-            s += inst.toString();
+            s += inst.toString(prof+1, niveles);
         }
-        s += '}';
+        niveles.set(1,false);
         return s;
     }
     
