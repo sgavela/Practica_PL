@@ -2,7 +2,9 @@ int n = 0;
 struct Persona{
     int nombre; 
     int dni;
+    vector<bool, 3> hijos = {true, true, false};
     };
+
 main {
     bool j = false;
     int k = 3;

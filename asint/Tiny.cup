@@ -382,6 +382,8 @@ INST_STRUCT ::= STRUCT:struct Ident:nombre LLAVEAPERTURA CAMPOS_STRUCT:lista LLA
 
 CAMPOS_STRUCT ::= INST_DECL:decl PUNTOCOMA CAMPOS_STRUCT:lista
 {:lista.add(decl); RESULT = lista;:};
+CAMPOS_STRUCT ::= INST_DECL_VECTOR:decl PUNTOCOMA CAMPOS_STRUCT:lista
+{:lista.add(decl); RESULT = lista;:};
 CAMPOS_STRUCT ::= 
 {:RESULT = new ArrayDeque<Instruccion>();:};
 
