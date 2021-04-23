@@ -91,7 +91,7 @@ non terminal TipoLista Tip_vect;
 
 non terminal ArrayDeque<Tipo_Id> ARGUMENTOS_INI, ARGUMENTOS;
 
-non terminal ArrayDeque<Expresion> ARGUMENTOSPROC_INI, ARGUMENTOSPROC, LIST_VAL, LIST_VAL2;
+non terminal ArrayDeque<Expresion> ARGUMENTOSPROC_INI, ARGUMENTOSPROC, LIST_VAL, LIST_VAL2, INDICES;
 
 non terminal ArrayDeque<Instruccion> CAMPOS_STRUCT;
 
@@ -449,8 +449,12 @@ EXPR_LLAM_FUN ::= Ident: id PARAPERTURA ARGUMENTOSPROC_INI: arg PARCIERRE
 {: RESULT = new ExpresionLlamadaFuncion(id, arg); :};
 
 //EXPRESION ACCESO A VECTOR
-EXPR_ACC_VECT ::= Ident: id CORCHAPERTURA Exp0: idx CORCHCIERRE
-{: RESULT = new ListIndex(id, idx); :};
+EXPR_ACC_VECT ::= Ident: id INDICES: list
+{: RESULT = new ListIndex(id, list); :};
+INDICES ::= CORCHAPERTURA Exp0: idx CORCHCIERRE
+{:ArrayDeque<Expresion> list = new ArrayDeque<Expresion>(); list.add(idx); RESULT = list;:};
+INDICES ::= INDICES: list CORCHAPERTURA Exp0: idx CORCHCIERRE 
+{: list.add(idx); RESULT = list; :};
 
 //5 TIPOS
 
