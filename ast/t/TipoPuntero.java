@@ -17,6 +17,6 @@ public class TipoPuntero extends Tipo {
    }
     
     public String toString(){
-        return tipoPuntero.toString() + '*';
+        return tipoPuntero.toString() + '$';
     }
 }

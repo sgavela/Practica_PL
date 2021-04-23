@@ -205,6 +205,10 @@ public class ALexOperations {
      return new UnidadLexica(alex.fila(),ClaseLexica.BARRABAJA,"_"); 
   }  
    
+  public UnidadLexica unidadDollar() {
+     return new UnidadLexica(alex.fila(),ClaseLexica.DOLLAR,"$"); 
+  } 
+
   public UnidadLexica unidadEof() {
      return new UnidadLexica(alex.fila(),ClaseLexica.EOF, "<EOF>"); 
   }  

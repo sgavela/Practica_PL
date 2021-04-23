@@ -1,0 +1,36 @@
+fun int media(int a, int b) {
+    int sol = a + b / 2;
+    return sol;
+}
+
+fun void swap(int & a, int & b) {
+    int aux = a;
+    a = b;
+    b = aux;
+}
+
+struct Persona{
+    int nombre; 
+    int dni;
+    vector<bool, 3> hijos = {true, true, false};
+    };
+
+fun bool iguales(bool a, bool b){
+    bool sol = a == b;
+    return sol;
+}
+
+fun vector<bool, 3> vect_bool(vector<int, 3> & v) {
+    vector<bool, 3> v_sol = {true, false, true};
+    return v_sol;
+}
+
+main {
+    int $ punt;
+    new(punt, 1);
+    int a = 1;
+    int b = 2;
+    bool iguales = iguales(a,b);
+    swap(a, b);
+    //vector<bool, 3> v = vect_bool({1,2,3});
+}

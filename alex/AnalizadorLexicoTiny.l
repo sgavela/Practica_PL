@@ -86,6 +86,7 @@ punto = \.
 asterisco = \*
 ampersand = \&
 barrabaja = \_
+dollar = \$
 %%
 {separador}               {}
 {comentario}              {}
@@ -142,5 +143,6 @@ barrabaja = \_
 {asterisco}                 {return ops.unidadAsterisco();}
 {ampersand}                 {return ops.unidadAmpersand();}
 {barrabaja}                 {return ops.unidadBarraBaja();}
+{dollar}                    {return ops.unidadDollar();}
 [^]
 {errores.errorLexico(fila(),lexema());}                           
