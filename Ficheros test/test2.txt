@@ -18,6 +18,8 @@ main {
     }
     int f = sumar(p,c);
     Persona carlos;
+    int $ i;
+    new(i, 1);
     vector<int, 4> v = {5, 6, 7, 8};
     vector<vector<int, 4>, 5> m = {1, 2, 4};
     int pos = v[3];

@@ -53,7 +53,7 @@ terminal     TYPEDEF, STRUCT,
              CORCHAPERTURA, CORCHCIERRE, 
              
              COMA, PUNTOCOMA, DOSPUNTOS, PUNTO,
-             ASTERISCO, AMPERSAND, BARRABAJA;
+             ASTERISCO, AMPERSAND, BARRABAJA, DOLLAR;
 
 non terminal ProgramaCompleto PROG_COMP;
 
@@ -74,13 +74,14 @@ non terminal InstruccionWhile INST_WHILE;
 non terminal InstruccionSwitch INST_SWITCH;
 non terminal InstruccionFor INST_FOR;
 non terminal InstruccionAsignacion INST_ASIG;
-non terminal InstruccionDeclaracion INST_DECL, INST_DECLASIG; 
+non terminal InstruccionDeclaracion INST_DECL, INST_DECLASIG, INST_DECL_PUNT; 
 non terminal InstruccionDeclVector INST_DECL_VECTOR;
 non terminal InstruccionDeclStruct INST_STRUCT;
 non terminal InstruccionDeclFuncion INST_DECL_FUN; 
 non terminal InstruccionLlamadaFuncion INST_CALL_PROC;
 non terminal InstruccionReturn INST_RETURN;
 non terminal InstruccionTypedef INST_TYPEDEF;
+non terminal InstruccionReservaMemoria INST_MEM;
 
 non terminal ExpresionLlamadaFuncion EXPR_LLAM_FUN;
 non terminal ListIndex EXPR_ACC_VECT;
@@ -111,6 +112,9 @@ CABECERA ::= INST_DECL: inst PUNTOCOMA CABECERA: cab
 CABECERA ::= INST_DECL_VECTOR: inst PUNTOCOMA CABECERA: cab
 {: cab.addInstr(inst); RESULT = cab; :};
 
+CABECERA ::= INST_DECL_PUNT: inst PUNTOCOMA CABECERA: cab
+{: cab.addInstr(inst); RESULT = cab; :};
+
 CABECERA ::= INST_ASIG: inst PUNTOCOMA CABECERA: cab
 {: cab.addInstr(inst); RESULT = cab; :};
 
@@ -118,6 +122,9 @@ CABECERA ::= INST_TYPEDEF: inst PUNTOCOMA CABECERA: cab
 {: cab.addInstr(inst); RESULT = cab; :};
 
 CABECERA ::= INST_STRUCT: inst PUNTOCOMA CABECERA: cab
+{: cab.addInstr(inst); RESULT = cab; :};
+
+CABECERA ::= INST_MEM: inst PUNTOCOMA CABECERA: cab
 {: cab.addInstr(inst); RESULT = cab; :};
 
 CABECERA ::=
@@ -131,6 +138,9 @@ CUERPO_MAIN ::= INST_DECL: inst PUNTOCOMA CUERPO_MAIN: c_main
 {: c_main.addInstr(inst); RESULT = c_main; :};
 
 CUERPO_MAIN ::= INST_DECL_VECTOR: inst PUNTOCOMA CUERPO_MAIN: c_main
+{: c_main.addInstr(inst); RESULT = c_main; :};
+
+CUERPO_MAIN ::= INST_DECL_PUNT: inst PUNTOCOMA CUERPO_MAIN: c_main
 {: c_main.addInstr(inst); RESULT = c_main; :};
 
 CUERPO_MAIN ::= INST_ASIG: inst PUNTOCOMA CUERPO_MAIN: c_main
@@ -149,6 +159,9 @@ CUERPO_MAIN ::= INST_IFELSE: inst CUERPO_MAIN: c_main
 {: c_main.addInstr(inst); RESULT = c_main; :};
 
 CUERPO_MAIN ::= INST_WHILE: inst CUERPO_MAIN: c_main
+{: c_main.addInstr(inst); RESULT = c_main; :};
+
+CUERPO_MAIN ::= INST_MEM: inst PUNTOCOMA CUERPO_MAIN: c_main
 {: c_main.addInstr(inst); RESULT = c_main; :};
 
 CUERPO_MAIN ::=
@@ -265,6 +278,9 @@ CUER ::= INST_DECL: inst PUNTOCOMA CUER: c
 CUER ::= INST_DECL_VECTOR: inst PUNTOCOMA CUER: c
 {: c.addInstr(inst); RESULT = c; :};
 
+CUER ::= INST_DECL_PUNT: inst PUNTOCOMA CUER: c
+{: c.addInstr(inst); RESULT = c; :};
+
 CUER ::= INST_ASIG: inst PUNTOCOMA CUER: c
 {: c.addInstr(inst); RESULT = c; :};
 
@@ -281,6 +297,9 @@ CUER ::= INST_IFELSE: inst CUER: c
 {: c.addInstr(inst); RESULT = c; :};
 
 CUER ::= INST_WHILE: inst CUER: c
+{: c.addInstr(inst); RESULT = c; :};
+
+CUER ::= INST_MEM: inst PUNTOCOMA CUER: c
 {: c.addInstr(inst); RESULT = c; :};
 
 CUER ::=
@@ -324,6 +343,10 @@ LIST_VAL  ::= Exp0:val
 {:ArrayDeque<Expresion> list = new ArrayDeque<Expresion>(); list.add(val); RESULT = list;:};
 LIST_VAL  ::=  LIST_VAL:list COMA Exp0:val 
 {:list.add(val); RESULT = list;:};
+
+//DECLARACION PUNTERO
+INST_DECL_PUNT ::= Tip: t DOLLAR Ident: id
+{: RESULT = new InstruccionDeclaracion(new TipoPuntero(t),id); :};
 
 //ARGUMENTOS FUNCION
 ARGUMENTOS_INI ::= Tip: t Ident: id ARGUMENTOS: arg
@@ -407,9 +430,13 @@ INST_CALL_PROC ::= Ident: id PARAPERTURA ARGUMENTOSPROC_INI: arg PARCIERRE
 INST_TYPEDEF ::= TYPEDEF Tip: tipo Ident: id
 {: RESULT = new InstruccionTypedef(tipo, id); :};
 
+//RESERVA MEMORIA
+INST_MEM ::= NEW PARAPERTURA Ident: id COMA NUM: tam PARCIERRE
+{: RESULT = new InstruccionReservaMemoria(id, tam); :};
+
 //STRUCTS
 INST_STRUCT ::= STRUCT:struct Ident:nombre LLAVEAPERTURA CAMPOS_STRUCT:lista LLAVECIERRE 
-{:RESULT = new InstruccionDeclStruct(nombre, lista);:};
+{: RESULT = new InstruccionDeclStruct(nombre, lista); :};
 
 CAMPOS_STRUCT ::= INST_DECL:decl PUNTOCOMA CAMPOS_STRUCT:lista
 {:lista.add(decl); RESULT = lista;:};
@@ -447,8 +474,6 @@ Tip_vect ::= LIST MENOR Tip_vect: t COMA NUM: n MAYOR
 Tip ::= Ident : nombreStruct
 {: RESULT = new TipoStruct(nombreStruct.getS()); :};
 
-Tip ::= Tip: t ASTERISCO
-{: RESULT = new TipoPuntero(t); :};
 
 
 
