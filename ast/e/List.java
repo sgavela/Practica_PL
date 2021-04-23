@@ -9,6 +9,10 @@ public class List extends Expresion {
         l = new ArrayDeque<Expresion>();
     }
 
+    public List(ArrayDeque<Expresion> l) {
+        this.l = l;
+    }
+
     public void addElem(Expresion e) {
         l.addFirst(e);
     }

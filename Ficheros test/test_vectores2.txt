@@ -1,0 +1,8 @@
+fun vector<bool, 3> vect_bool(vector<int, 3> & v) {
+    vector<bool, 3> v_sol = {true, false, true};
+    return {1, 2, 3};
+}
+
+main {
+    
+}

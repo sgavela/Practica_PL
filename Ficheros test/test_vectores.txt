@@ -7,6 +7,11 @@ vector<vector<int, 2>, 3> m = {v1, v2, v3};
 vector<bool, 5> u = {false, 3+ 4, funcion(a, b), v[7]};
 int pos = v[3];
 
+fun vector<bool, 3> vect_bool(vector<int, 3> & v) {
+    vector<bool, 3> v_sol = {true, false, true};
+    return {1, 2, 3};
+}
+
 main {
     vector<int, 4> v; 
     v = {2, 3};
@@ -17,5 +22,6 @@ main {
     vector<bool, 5> u = {false, 3+ 4, funcion(a, b), v[7]};
     int pos = v[3];
     pos = v[3][2];  
-    vector<Persona, 4> p;  
+    vector<Persona, 4> p;
+    vector<vector<int, 3>, 4> m;  
 }

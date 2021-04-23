@@ -85,6 +85,7 @@ non terminal InstruccionTypedef INST_TYPEDEF;
 non terminal InstruccionReservaMemoria INST_MEM;
 
 non terminal ExpresionLlamadaFuncion EXPR_LLAM_FUN;
+non terminal List EXP_VECTOR;
 non terminal ListIndex EXPR_ACC_VECT;
 
 non terminal Tipo Tip;
@@ -92,7 +93,7 @@ non terminal TipoLista Tip_vect;
 
 non terminal ArrayDeque<Tipo_Id> ARGUMENTOS_INI, ARGUMENTOS;
 
-non terminal ArrayDeque<Expresion> ARGUMENTOSPROC_INI, ARGUMENTOSPROC, LIST_VAL, LIST_VAL2, INDICES;
+non terminal ArrayDeque<Expresion> ARGUMENTOSPROC_INI, ARGUMENTOSPROC, LIST_VAL, LIST_VAL2, LIST_VAL3, INDICES;
 
 non terminal ArrayDeque<Instruccion> CAMPOS_STRUCT;
 
@@ -251,6 +252,10 @@ Exp7 ::= EXPR_LLAM_FUN: llam_fun
 Exp7 ::= EXPR_ACC_VECT: acc
 {: RESULT = acc; :};
 
+//CASO BASE VECTOR
+Exp7 ::= EXP_VECTOR: v
+{: RESULT = v; :};
+
 //4 INSTRUCCIONES
 /*
 INST ::= INST_IF:op1
@@ -339,12 +344,8 @@ INST_ASIG ::= Ident: id IGUAL Exp0: exp
 {: RESULT = new InstruccionAsignacion(id, exp); :};
 
 //ASIGNACION VECTORES
-INST_ASIG_VECTOR  ::= Ident: id IGUAL LLAVEAPERTURA LIST_VAL2:list LLAVECIERRE
-{: RESULT = new InstruccionAsigVector(id,list);:};
-LIST_VAL2  ::= Exp0:val
-{:ArrayDeque<Expresion> list = new ArrayDeque<Expresion>(); list.add(val); RESULT = list;:};
-LIST_VAL2  ::=  LIST_VAL2:list COMA Exp0:val 
-{:list.add(val); RESULT = list;:};
+INST_ASIG_VECTOR  ::= Ident: id IGUAL LLAVEAPERTURA EXP_VECTOR: v
+{: RESULT = new InstruccionAsigVector(id,v.valores());:};
 
 //DECLARACION
 INST_DECL ::= Tip: t Ident: id
@@ -359,12 +360,8 @@ INST_DECLASIG ::= Tip: t Ident: id IGUAL Exp0: exp
 {: RESULT = new InstruccionDeclaracion(t,id,exp); :};
 
 //DECLARACION VECTORES CON ASIGNACION
-INST_DECL_VECTOR  ::= Tip_vect: t Ident: id IGUAL LLAVEAPERTURA LIST_VAL:list LLAVECIERRE
-{: RESULT = new InstruccionDeclVector(t.getTipoDeLaLista(),id,t.length(),list);:};
-LIST_VAL  ::= Exp0:val
-{:ArrayDeque<Expresion> list = new ArrayDeque<Expresion>(); list.add(val); RESULT = list;:};
-LIST_VAL  ::=  LIST_VAL:list COMA Exp0:val 
-{:list.add(val); RESULT = list;:};
+INST_DECL_VECTOR  ::= Tip_vect: t Ident: id IGUAL EXP_VECTOR: v
+{: RESULT = new InstruccionDeclVector(t.getTipoDeLaLista(),id,t.length(),v.valores());:};
 
 //DECLARACION PUNTERO
 INST_DECL_PUNT ::= Tip: t DOLLAR Ident: id
@@ -509,6 +506,14 @@ INDICES ::= CORCHAPERTURA Exp0: idx CORCHCIERRE
 {:ArrayDeque<Expresion> list = new ArrayDeque<Expresion>(); list.add(idx); RESULT = list;:};
 INDICES ::= INDICES: list CORCHAPERTURA Exp0: idx CORCHCIERRE 
 {: list.add(idx); RESULT = list; :};
+
+//EXPRESION VECTOR
+EXP_VECTOR ::= LLAVEAPERTURA LIST_VAL3:list LLAVECIERRE
+{: RESULT = new List(list);:};
+LIST_VAL3  ::= Exp0:val
+{:ArrayDeque<Expresion> list = new ArrayDeque<Expresion>(); list.add(val); RESULT = list;:};
+LIST_VAL3  ::=  LIST_VAL3:list COMA Exp0:val 
+{:list.add(val); RESULT = list;:};
 
 //5 TIPOS
 
