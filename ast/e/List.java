@@ -1,6 +1,7 @@
 package ast.e;
 
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 
 public class List extends Expresion {
 	private ArrayDeque<Expresion> l;
@@ -19,6 +20,10 @@ public class List extends Expresion {
    
     public ArrayDeque<Expresion> valores() {
         return l;
+    }
+
+    public String toString(int prof, ArrayList<Boolean> niveles) {
+        return l.toString();
     }
 
     public String toString() {
