@@ -1,0 +1,19 @@
+vector<int, 4> v; 
+v = {2, 3};
+vector<int, 2> v1 = {1, 2};
+vector<int, 2> v2 = {3, 4};
+vector<int, 2> v3 = {5, 6};
+vector<vector<int, 2>, 3> m = {v1, v2, v3};
+vector<bool, 5> u = {false, 3+ 4, funcion(a, b), v[7]};
+int pos = v[3];
+
+main {
+    vector<int, 4> v; 
+    v = {2, 3};
+    vector<int, 2> v1 = {1, 2};
+    vector<int, 2> v2 = {3, 4};
+    vector<int, 2> v3 = {5, 6};
+    vector<vector<int, 2>, 3> m = {v1, v2, v3};
+    vector<bool, 5> u = {false, 3+ 4, funcion(a, b), v[7]};
+    int pos = v[3];  
+}
