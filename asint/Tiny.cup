@@ -377,6 +377,12 @@ ARGUMENTOS_INI ::= Tip: t Ident: id ARGUMENTOS: arg
 ARGUMENTOS_INI ::= Tip: t AMPERSAND Ident: id ARGUMENTOS: arg
 {: arg.addFirst(new Tipo_Id(t, id)); RESULT = arg; :};
 
+ARGUMENTOS_INI ::= Tip_vect: t Ident: id ARGUMENTOS: arg
+{: arg.addFirst(new Tipo_Id(t, id)); RESULT = arg; :};
+
+ARGUMENTOS_INI ::= Tip_vect: t AMPERSAND Ident: id ARGUMENTOS: arg
+{: arg.addFirst(new Tipo_Id(t, id)); RESULT = arg; :};
+
 ARGUMENTOS_INI ::= 
 {: RESULT = new ArrayDeque<Tipo_Id>(); :};
 
@@ -384,6 +390,12 @@ ARGUMENTOS ::= COMA Tip: t Ident: id ARGUMENTOS: arg
 {: arg.addFirst(new Tipo_Id(t, id)); RESULT = arg; :};
 
 ARGUMENTOS ::= COMA Tip: t AMPERSAND Ident: id ARGUMENTOS: arg
+{: arg.addFirst(new Tipo_Id(t, id)); RESULT = arg; :};
+
+ARGUMENTOS ::= COMA Tip_vect: t Ident: id ARGUMENTOS: arg
+{: arg.addFirst(new Tipo_Id(t, id)); RESULT = arg; :};
+
+ARGUMENTOS ::= COMA Tip_vect: t AMPERSAND Ident: id ARGUMENTOS: arg
 {: arg.addFirst(new Tipo_Id(t, id)); RESULT = arg; :};
 
 ARGUMENTOS ::= 
@@ -396,7 +408,16 @@ CUER_FUN ::= INST_DECLASIG: inst PUNTOCOMA CUER_FUN: c
 CUER_FUN ::= INST_DECL: inst PUNTOCOMA CUER_FUN: c
 {: c.addInstr(inst); RESULT = c; :};
 
+CUER_FUN ::= INST_DECL_VECTOR: inst PUNTOCOMA CUER_FUN: c
+{: c.addInstr(inst); RESULT = c; :};
+
+CUER_FUN ::= INST_DECL_PUNT: inst PUNTOCOMA CUER_FUN: c
+{: c.addInstr(inst); RESULT = c; :};
+
 CUER_FUN ::= INST_ASIG: inst PUNTOCOMA CUER_FUN: c
+{: c.addInstr(inst); RESULT = c; :};
+
+CUER_FUN ::= INST_ASIG_VECTOR: inst PUNTOCOMA CUER_FUN: c
 {: c.addInstr(inst); RESULT = c; :};
 
 CUER_FUN ::= INST_CALL_PROC: inst PUNTOCOMA CUER_FUN: c
@@ -417,11 +438,17 @@ CUER_FUN ::= INST_WHILE: inst CUER_FUN: c
 CUER_FUN ::= INST_RETURN: inst PUNTOCOMA CUER_FUN: c
 {: c.addInstr(inst); RESULT = c; :};
 
+CUER_FUN ::= INST_MEM: inst PUNTOCOMA CUER_FUN: c
+{: c.addInstr(inst); RESULT = c; :};
+
 CUER_FUN ::=
 {: RESULT = new Cuerpo(); :}; 
 
 //DECLARACION DE FUNCION
 INST_DECL_FUN ::= FUNCTION Tip: tipo_dev Ident: id PARAPERTURA ARGUMENTOS_INI: arg PARCIERRE LLAVEAPERTURA CUER_FUN: c LLAVECIERRE
+{: RESULT = new InstruccionDeclFuncion(tipo_dev, id, arg, c); :};
+
+INST_DECL_FUN ::= FUNCTION Tip_vect: tipo_dev Ident: id PARAPERTURA ARGUMENTOS_INI: arg PARCIERRE LLAVEAPERTURA CUER_FUN: c LLAVECIERRE
 {: RESULT = new InstruccionDeclFuncion(tipo_dev, id, arg, c); :};
 
 INST_DECL_FUN ::= FUNCTION VOID Ident: id PARAPERTURA ARGUMENTOS_INI: arg PARCIERRE LLAVEAPERTURA CUER: c LLAVECIERRE
@@ -492,9 +519,6 @@ Tip_vect ::= LIST MENOR Tip: t COMA NUM: n MAYOR
 
 Tip_vect ::= LIST MENOR Tip_vect: t COMA NUM: n MAYOR
 {: RESULT = new TipoLista(t, n); :};
-
-Tip ::= Tip: t ASTERISCO
-{: RESULT = new TipoPuntero(t); :};
 
 Tip ::= Ident : nombreStruct
 {: RESULT = new TipoStruct(nombreStruct.getS()); :};
