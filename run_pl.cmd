@@ -11,4 +11,4 @@ cd ../
 move AnalizadorSintacticoTiny.java asint 
 move ClaseLexica.java asint
 javac -cp cup.jar alex/*.java asint/*.java ast/*.java ast/e/*.java ast/t/*.java ast/i/*.java errors/*.java
-java -cp ".;cup.jar" asint.Main "Ficheros test"/test_vectores2.txt
+java -cp ".;cup.jar" asint.Main "Ficheros test"/test_vectores.txt

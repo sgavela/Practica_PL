@@ -1,5 +1,7 @@
-vector<vector<int, 3>, 4> m;
-vector<vector<int, 3>, 2> m = {{4, 5, 6}, {7, 8, 9}};
-
-return {1,2,3}; (Creo que faltaría una expresión que fuera una lista ya definida)
 vector<bool, 3> v = vect_bool({1,2,3}); (Quizá la declaración/asignación de la lista debería permitir asignar cualquier expresión)
+punteros a vectores?
+vectores de punteros?
+expresiones que sean campos de un struct
+ejemplos de typedef
+instruccion de acceso a punteros?
+Asignacion de memoria dinamica?
