@@ -4,10 +4,15 @@ import ast.e.Expresion;
 import ast.e.Id;
 import java.util.ArrayList;
 import java.util.ArrayDeque;
+import asem.TablaSimbolos;
+import ast.t.Tipo;
+import asem.ExcepcionIdNoExistente;
 
 public class InstruccionAsigVector extends Instruccion {
     private Id id;
     private ArrayDeque<Expresion> valores;
+    public Object vinculo;
+    private Tipo tipo;
     
     public InstruccionAsigVector(Id id, ArrayDeque<Expresion> valores) {
         this.id = id;
@@ -24,6 +29,35 @@ public class InstruccionAsigVector extends Instruccion {
     
     public ArrayDeque<Expresion> getValores() {
         return this.valores;
+    }
+
+    public int vinculacion(TablaSimbolos ts){
+        int errores = 0;
+        try {
+            vinculo = ts.buscaId(id.toString());
+            InstruccionDeclVector vinculoVector = (InstruccionDeclVector) vinculo;
+            tipo = vinculoVector.getTipo();
+        } catch (ExcepcionIdNoExistente e) {
+            errores += 1;
+            System.err.println("Error en la fila "+ ". La función " + id + " no existe");
+        }
+        return errores;
+    }
+
+    public int chequea(){
+        int errores = 0;      
+        int i = 0;
+        for(Expresion valor : valores){
+            Tipo valorTipo = valor.getTipo();
+            if (!tipo.equals(valorTipo)) {
+                errores += 1;
+                System.err.println("Error de tipos. El identificador del vector es tipo " +
+                        tipo + " pero la expresion en la posicion " +
+                        i + " es tipo " + valor.getTipo());
+            }
+            i += 1;
+        }
+        return errores;
     }
     
     public String toString(int prof, ArrayList<Boolean> niveles) {

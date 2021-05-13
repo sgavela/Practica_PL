@@ -3,6 +3,7 @@ package ast.e;
 import ast.t.Tipo;
 import ast.t.Tipos;
 import java.util.ArrayList;
+import asem.TablaSimbolos;
 
 public class Number extends Expresion {
 	
@@ -19,6 +20,10 @@ public class Number extends Expresion {
     public Expresiones tipo() {
         return Expresiones.NUM;
     }
+
+    public int vinculacion(TablaSimbolos ts) { return 0; }
+    
+    public int chequea() { return 0; };
     
     public String toString() {
         return s;

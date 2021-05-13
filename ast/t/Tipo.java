@@ -11,7 +11,7 @@ private Tipos tipo;
         return tipo;
     }
     
-    public boolean igual_tipo(Tipo t) {
+    public boolean equals(Tipo t) {
         return this.tipo == t.tipo;
     }
 

@@ -2,6 +2,7 @@ package ast.i;
 
 import ast.e.Id;
 import java.util.ArrayList;
+import asem.TablaSimbolos;
 
 public class InstruccionReservaMemoria extends Instruccion {
     private Id id;
@@ -15,6 +16,9 @@ public class InstruccionReservaMemoria extends Instruccion {
     public TipoInstruccion getTipo() {
         return TipoInstruccion.RESMEM;
     }
+
+    public int vinculacion(TablaSimbolos ts){return 0;}
+    public int chequea(){return 0;}
     
     public String toString(int prof, ArrayList<Boolean> niveles) {
         String s = "";

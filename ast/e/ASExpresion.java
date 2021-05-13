@@ -3,6 +3,7 @@ package ast.e;
 import ast.t.Tipo;
 import ast.t.Tipo_Id;
 import java.util.ArrayDeque;
+import asem.TablaSimbolos;
 
 public class ASExpresion {
       public Expresion suma(Expresion opnd1, Expresion opnd2) {return new ExpresionBin(opnd1,opnd2, Expresiones.SUM);}
@@ -25,7 +26,7 @@ public class ASExpresion {
       public Expresion bool_false() {return new Booleano("false");}
       public Expresion num(String n) {return new Number(n);}
       public Expresion fun(Id id, ArrayDeque<Expresion> args) {return new ExpresionLlamadaFuncion(id, args);}
-      public Expresion crea_iden(String id) {return new Id(id);}
+      //public Expresion crea_iden(String id) {return new Id(id);}
      
 
 }

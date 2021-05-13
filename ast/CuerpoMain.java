@@ -3,6 +3,8 @@ package ast;
 import ast.i.Instruccion;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Iterator;
+import asem.TablaSimbolos;
 
 public class CuerpoMain {
     private ArrayDeque<Instruccion> instrucciones;
@@ -17,6 +19,29 @@ public class CuerpoMain {
     
     public void addInstr(Instruccion instr) {
         instrucciones.addFirst(instr);
+    }
+
+    public int vinculacion(TablaSimbolos ts){
+        Iterator<Instruccion> instruccionesIt = instrucciones.iterator();
+        int errores = 0;
+ 
+        while(instruccionesIt.hasNext()){
+            Instruccion ins = instruccionesIt.next();
+            errores += ins.vinculacion(ts);
+        }
+        
+        return errores;
+    }
+    
+    public int chequea(){
+        int errores = 0;
+        Iterator<Instruccion> instruccionesIt = instrucciones.iterator();
+
+        while(instruccionesIt.hasNext()){
+            Instruccion ins = instruccionesIt.next();
+            errores += ins.chequea();
+        }
+        return errores;
     }
     
     public String toString(int prof, ArrayList<Boolean> niveles) {

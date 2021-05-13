@@ -1,0 +1,24 @@
+int k;
+bool c = true;
+
+main{
+    int i = 4;
+    k = 5;
+
+    k = k + 2 - 3 * i;
+
+    if(c){
+        bool j;
+    }
+
+    while(k < 3){
+        k = k + 1;
+    }
+
+    for(int i = 0; i < 4; i = i + 1){
+        if(k == 2){
+            c = true;
+        }
+    }
+
+}

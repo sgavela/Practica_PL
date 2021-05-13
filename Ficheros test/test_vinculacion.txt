@@ -1,0 +1,26 @@
+int j;
+struct Persona{
+    int nombre; 
+    int dni;
+    vector<bool, 3> hijos = {true, true, false};
+};
+
+main{
+    int i = 0;
+    j = 1;   
+    
+    if(i > 0){
+        int f;
+        i = i + 1;
+        f = 4;
+        vector<int, 3> v = {1, 2, 3};
+    }
+    else{
+        i = 2;
+        int a = v[2];
+    }
+    j = 2;
+    while(i > 0){
+        j = j + 1;
+    }
+}

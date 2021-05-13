@@ -2,6 +2,7 @@ package ast.i;
 
 import ast.e.Expresion;
 import java.util.ArrayList;
+import asem.TablaSimbolos;
 
 public class InstruccionReturn extends Instruccion {
     private Expresion e;
@@ -12,6 +13,20 @@ public class InstruccionReturn extends Instruccion {
     
     public TipoInstruccion getTipo() {
         return TipoInstruccion.RETURN;
+    }
+
+    public int vinculacion(TablaSimbolos ts){
+        /*if (e != null) {
+            return e.vinculacion(ts);
+        }*/
+        return 0;
+    }
+    public int chequea(){
+        /*
+        if (e != null) {
+            return e.chequea(); 
+        }
+        else*/ return 0;
     }
     
     public String toString(int prof, ArrayList<Boolean> niveles) {

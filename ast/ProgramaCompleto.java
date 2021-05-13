@@ -1,6 +1,7 @@
 package ast;
 
 import java.util.ArrayList;
+import asem.TablaSimbolos;
 
 public class ProgramaCompleto {
     private Cabecera cabecera;
@@ -9,6 +10,20 @@ public class ProgramaCompleto {
     public ProgramaCompleto(Cabecera cabecera, CuerpoMain cmain) {
         this.cabecera = cabecera;
         this.cmain = cmain;
+    }
+
+    public int vinculacion(TablaSimbolos ts) {
+        ts.abreBloque();
+        int errores = cabecera.vinculacion(ts);
+        errores += cmain.vinculacion(ts);
+        ts.cierraBloque();
+        return errores;
+    }
+    
+    public int chequea() {
+        int errores = cabecera.chequea();
+        errores += cmain.chequea();
+        return errores;
     }
     
     public String toString() {

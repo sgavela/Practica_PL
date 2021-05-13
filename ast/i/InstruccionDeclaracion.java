@@ -2,13 +2,18 @@ package ast.i;
 
 import ast.e.Expresion;
 import ast.e.Id;
+import ast.e.ListIndex;
 import ast.t.Tipo;
 import java.util.ArrayList;
+import asem.TablaSimbolos;
+import asem.ExcepcionIdNoExistente;
+import errors.ExcepcionTipoDesconocido;
 
 public class InstruccionDeclaracion extends Instruccion {
-    private Tipo tipo;
+    protected Tipo tipo;
     private Id id;
     private Expresion valor;
+    private Object vinculoId;
     
     public InstruccionDeclaracion(Tipo tipo, Id id) {
         this.tipo = tipo;
@@ -22,11 +27,11 @@ public class InstruccionDeclaracion extends Instruccion {
         this.valor = valor;
     }
      
-     public TipoInstruccion getTipo() {
+    public TipoInstruccion getTipoInstruccion() {
          return TipoInstruccion.DECL;
      }
 
-     public Tipo getTipoVar() {
+    public Tipo getTipo(){
         return this.tipo;
     }
     
@@ -36,6 +41,36 @@ public class InstruccionDeclaracion extends Instruccion {
     
     public Expresion getValor() {
         return this.valor;
+    }
+
+    public int vinculacion(TablaSimbolos ts) {
+        if(valor==null){
+            int errores = 0;
+            return errores + ts.insertaId(id, this);
+        }
+        else{
+            int errores = ts.insertaId(id, this);
+            errores += valor.vinculacion(ts);
+            return errores;
+        }
+    }
+    
+    public int chequea() {
+        if(valor==null){
+            return 0;
+        }
+        else{
+            int errores = valor.chequea();
+            Tipo tipoTipo = this.tipo;
+            Tipo valorTipo = valor.getTipo();
+            //System.out.println(valor);
+            if (!tipoTipo.equals(valorTipo)) {
+                errores += 1;
+                System.err.println("Error en la declaracion, el identificador es tipo " +
+                        this.tipo + " pero la expresion es tipo " + valor.getTipo());
+            }
+            return errores;
+        }
     }
      
     public String toString(int prof, ArrayList<Boolean> niveles) {

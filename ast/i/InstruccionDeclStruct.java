@@ -4,6 +4,7 @@ import ast.e.Id;
 import ast.t.Tipo_Id;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import asem.TablaSimbolos;
 
 public class InstruccionDeclStruct extends Instruccion {
     private Id id;
@@ -17,6 +18,12 @@ public class InstruccionDeclStruct extends Instruccion {
     public TipoInstruccion getTipo() {
         return TipoInstruccion.DECLSTRUCT;
     }
+
+    public int vinculacion(TablaSimbolos ts){
+        System.out.println("No esta implementado el analizador semantico para structs");
+        return 0;
+    }
+    public int chequea(){return 0;}
     
     public String toString(int prof, ArrayList<Boolean> niveles) {
         String s = "";

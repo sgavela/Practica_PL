@@ -3,6 +3,9 @@ package ast.i;
 import ast.e.Expresion;
 import ast.e.Id;
 import java.util.ArrayList;
+import asem.TablaSimbolos;
+import ast.t.Tipos;
+import ast.t.Tipo;
 
 public class InstruccionFor extends Instruccion {
     private Id id;
@@ -21,6 +24,44 @@ public class InstruccionFor extends Instruccion {
     
     public TipoInstruccion getTipo() {
         return TipoInstruccion.FOR;
+    }
+
+    public int vinculacion(TablaSimbolos ts){
+        int errores = id.vinculacion(ts);
+        errores += valor_ini.vinculacion(ts);
+        errores += condicion.vinculacion(ts);
+        errores += paso.vinculacion(ts);
+        ts.abreBloque();
+        errores += cuerpo_for.vinculacion(ts);
+        ts.cierraBloque();
+        return errores;
+    }
+
+    public int chequea(){
+        int errores = condicion.chequea();
+        /*
+        Tipo tipoId = id.getTipo();
+        Tipo tipoValor = valor_ini.getTipo();
+        if (!tipoId.equals(tipoValor)) {
+            errores += 1;
+            //idTipo=id.getFila();           
+            System.err.println("Error de tipos. " + "El tipo del identificador es "
+                +id.getTipo()+" pero el de la expresion es " + valor_ini.getTipo());
+        }
+        */
+        errores += paso.chequea();
+        if (condicion.getTipo().getTipo() != Tipos.BOOLEAN) {
+            errores += 1;
+            System.err.println("Error de tipos. La condición"
+                    + " del bucle for tiene tipo " + condicion.getTipo().getTipo());
+        }
+        if (paso.getTipo().getTipo() != Tipos.INTEGER) {
+            errores += 1;
+            System.err.println("Error de tipos. El paso"
+                    + " del bucle for tiene tipo " + paso.getTipo().getTipo());
+        }
+        errores += cuerpo_for.chequea();
+        return errores;
     }
     
     public String toString(int prof, ArrayList<Boolean> niveles){

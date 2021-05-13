@@ -2,6 +2,8 @@ package ast.i;
 
 import ast.e.Expresion;
 import java.util.ArrayList;
+import asem.TablaSimbolos;
+import ast.t.Tipos;
 
 public class InstruccionWhile extends Instruccion {
     private Expresion condicion;
@@ -14,6 +16,25 @@ public class InstruccionWhile extends Instruccion {
     
     public TipoInstruccion getTipo() {
         return TipoInstruccion.WHILE;
+    }
+
+    public int vinculacion(TablaSimbolos ts) {
+        int errores = condicion.vinculacion(ts);
+        ts.abreBloque();
+        errores += cuerpo_while.vinculacion(ts);
+        ts.cierraBloque();
+        return errores;
+    }
+
+    public int chequea() {
+        int errores = condicion.chequea();
+        if (condicion.getTipo().getTipo() != Tipos.BOOLEAN) {
+            errores += 1;
+            System.err.println("Error de tipos. La condición"
+                    + " del bucle tiene tipo " + condicion.getTipo().getTipo());
+        }
+        errores += cuerpo_while.chequea();
+        return errores;
     }
     
     public String toString(int prof, ArrayList<Boolean> niveles) {

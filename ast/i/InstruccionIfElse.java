@@ -2,6 +2,9 @@ package ast.i;
 
 import ast.e.Expresion;
 import java.util.ArrayList;
+import asem.TablaSimbolos;
+import ast.t.Tipos;
+import ast.t.Tipo;
 
 public class InstruccionIfElse extends Instruccion {
     private Expresion condicion;
@@ -22,6 +25,41 @@ public class InstruccionIfElse extends Instruccion {
     
     public TipoInstruccion getTipo() {
         return TipoInstruccion.IFELSE;
+    }
+
+    public int vinculacion(TablaSimbolos ts) {
+        int errores = condicion.vinculacion(ts);
+        //Después creamos un ámbito para cada bloque 
+        ts.abreBloque();
+        errores += cuerpo_then.vinculacion(ts);
+        ts.cierraBloque();
+        
+        //En caso de tener un bloque else lo procesamos
+        if (cuerpo_else != null) {
+            ts.abreBloque();
+            errores += cuerpo_else.vinculacion(ts);
+            ts.cierraBloque();
+        }
+        return errores;
+    }
+
+    public int chequea() {
+        //Comprobamos que coinciden el tipo de la declaración con el de la expresión
+        int errores = condicion.chequea();
+
+        Tipo tipoCond = condicion.getTipo();
+
+        if (tipoCond != null && !tipoCond.equals(new Tipo(Tipos.BOOLEAN))) {
+            errores += 1;
+            System.err.println("Error de tipos. En el condicional el tipo de la condición es " + tipoCond.getTipo() +
+                                     " y no booleano");
+        }
+
+        errores += cuerpo_then.chequea();
+        if (cuerpo_else != null) {
+            errores += cuerpo_else.chequea();
+        }
+        return errores;
     }
     
     public String toString(int prof, ArrayList<Boolean> niveles) {

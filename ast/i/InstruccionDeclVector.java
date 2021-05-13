@@ -6,12 +6,15 @@ import ast.t.Tipo;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Iterator;
+import asem.TablaSimbolos;
 
 public class InstruccionDeclVector extends Instruccion {
     private Tipo tipo;
     private Id id;
     private int tam; 
     private ArrayDeque<Expresion> valores;
+    Object vinculoId;
     
     public InstruccionDeclVector(Tipo tipo, Id id, int tam) {
         this.tipo = tipo;
@@ -20,19 +23,23 @@ public class InstruccionDeclVector extends Instruccion {
         this.valores = null;
     }
     
-     public InstruccionDeclVector(Tipo tipo, Id id, int tam, ArrayDeque<Expresion> valores) {
+    public InstruccionDeclVector(Tipo tipo, Id id, int tam, ArrayDeque<Expresion> valores) {
         this.tipo = tipo;
         this.id = id;
         this.tam = tam;
         this.valores = valores;
     }
      
-     public TipoInstruccion getTipo() {
+     public TipoInstruccion getTipoInstruccion() {
          return TipoInstruccion.DECL;
      }
 
-     public Tipo getTipoVar() {
+    public Tipo getTipo(){
         return this.tipo;
+    }
+
+    public int getTam(){
+        return this.tam;
     }
     
     public Id getId() {
@@ -41,6 +48,37 @@ public class InstruccionDeclVector extends Instruccion {
     
     public ArrayDeque<Expresion> getValores() {
         return this.valores;
+    }
+
+    public int vinculacion(TablaSimbolos ts){
+        int errores = ts.insertaId(id, this);
+        for(Expresion valor : valores){            
+            errores += valor.vinculacion(ts);
+        }
+        return errores;
+    }
+    public int chequea(){
+        int errores = 0;
+        Tipo tipoTipo = this.tipo;
+        //Iterator valor = valores.iterator();
+        int i = 0;
+        for(Expresion valor : valores){
+            errores += valor.chequea();
+            Tipo valorTipo = valor.getTipo();
+            if (!tipoTipo.equals(valorTipo)) {
+                errores += 1;
+                System.err.println("Error de tipos. El identificador del vector es tipo " +
+                        this.tipo + " pero la expresion en la posicion " +
+                        i + " es tipo " + valor.getTipo());
+            }
+            i += 1;
+        }
+        if(i != tam){
+            errores += 1;
+            System.err.println("Error de tipos. El tamanio declarado para el vector " + id.toString() 
+                        + " es " + tam + " pero hay " + i + " elementos en la declaracion.");
+        }
+        return errores;
     }
      
      public String toString(int prof, ArrayList<Boolean> niveles) {

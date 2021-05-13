@@ -1,0 +1,12 @@
+fun int media(bool a, int b) {
+    bool sol;
+    sol = a;
+    int sol2 = b;
+    return b;
+}
+
+main{   
+    bool arg1;
+    bool arg2;
+    int r = media(arg1, arg2);
+}

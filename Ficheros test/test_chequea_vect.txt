@@ -1,0 +1,11 @@
+main{   
+    vector<int, 4> v = {67, 2, 4, 9};
+    int i = 0;
+    int mayor = v[0];
+    while(i < 4){
+        if(v[i] > mayor){
+            mayor = v[i];
+        }
+        i = i + 1;
+    }
+}

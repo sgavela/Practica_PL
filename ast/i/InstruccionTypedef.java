@@ -3,6 +3,7 @@ package ast.i;
 import ast.e.Id;
 import ast.t.Tipo;
 import java.util.ArrayList;
+import asem.TablaSimbolos;
 
 public class InstruccionTypedef extends Instruccion {
     private Tipo tipo;
@@ -16,6 +17,9 @@ public class InstruccionTypedef extends Instruccion {
     public TipoInstruccion getTipo() {
         return TipoInstruccion.TYPEDEF;
     }
+
+    public int vinculacion(TablaSimbolos ts){return 0;}
+    public int chequea(){return 0;}
     
     public String toString(int prof, ArrayList<Boolean> niveles) {
         String s = "";
