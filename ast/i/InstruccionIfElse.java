@@ -4,6 +4,8 @@ import ast.e.Expresion;
 import java.util.ArrayList;
 import asem.TablaSimbolos;
 import ast.t.Tipos;
+import generador_codigo.Bloque;
+import generador_codigo.GeneradorCodigo;
 import ast.t.Tipo;
 
 public class InstruccionIfElse extends Instruccion {
@@ -60,6 +62,27 @@ public class InstruccionIfElse extends Instruccion {
             errores += cuerpo_else.chequea();
         }
         return errores;
+    }
+
+    public String code_I(Bloque bloque, GeneradorCodigo gc) {
+        String s = "";
+        s += condicion.code_E(bloque, gc);
+        s += "if\n";
+        gc.abreBloque(bloque);
+        for(Instruccion i: cuerpo_then.getInstr()) {
+            s += gc.generaCodigo(i);
+        }
+        gc.cierraBloque();
+        if(cuerpo_else != null) {
+            s += "else\n";
+            gc.abreBloque(bloque);
+            for(Instruccion i: cuerpo_else.getInstr()) {
+                s += gc.generaCodigo(i);
+            }
+            gc.cierraBloque();
+        }
+        s += "end\n";
+        return s;
     }
     
     public String toString(int prof, ArrayList<Boolean> niveles) {

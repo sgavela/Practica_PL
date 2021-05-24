@@ -32,7 +32,7 @@ init with {:
 terminal     String NUM, IDEN;
 terminal     TYPEDEF, STRUCT,
 
-             FUNCTION, RETURN, VOID, NEW, MAIN,
+             FUNCTION, RETURN, VOID, NEW, MAIN, PRINT,
 
              IF, ELSE,
              WHILE, FOR, SWITCH, CASE,
@@ -83,6 +83,7 @@ non terminal InstruccionLlamadaFuncion INST_CALL_PROC;
 non terminal InstruccionReturn INST_RETURN;
 non terminal InstruccionTypedef INST_TYPEDEF;
 non terminal InstruccionReservaMemoria INST_MEM;
+non terminal InstruccionPrint INST_PRINT;
 
 non terminal ExpresionLlamadaFuncion EXPR_LLAM_FUN;
 non terminal List EXP_VECTOR;
@@ -170,6 +171,9 @@ CUERPO_MAIN ::= INST_WHILE: inst CUERPO_MAIN: c_main
 {: c_main.addInstr(inst); RESULT = c_main; :};
 
 CUERPO_MAIN ::= INST_MEM: inst PUNTOCOMA CUERPO_MAIN: c_main
+{: c_main.addInstr(inst); RESULT = c_main; :};
+
+CUERPO_MAIN ::= INST_PRINT: inst PUNTOCOMA CUERPO_MAIN: c_main
 {: c_main.addInstr(inst); RESULT = c_main; :};
 
 CUERPO_MAIN ::=
@@ -317,6 +321,9 @@ CUER ::= INST_WHILE: inst CUER: c
 CUER ::= INST_MEM: inst PUNTOCOMA CUER: c
 {: c.addInstr(inst); RESULT = c; :};
 
+CUER ::= INST_PRINT: inst PUNTOCOMA CUER: c
+{: c.addInstr(inst); RESULT = c; :};
+
 CUER ::=
 {: RESULT = new Cuerpo(); :}; 
 
@@ -438,6 +445,9 @@ CUER_FUN ::= INST_RETURN: inst PUNTOCOMA CUER_FUN: c
 CUER_FUN ::= INST_MEM: inst PUNTOCOMA CUER_FUN: c
 {: c.addInstr(inst); RESULT = c; :};
 
+CUER_FUN ::= INST_PRINT: inst PUNTOCOMA CUER_FUN: c
+{: c.addInstr(inst); RESULT = c; :};
+
 CUER_FUN ::=
 {: RESULT = new Cuerpo(); :}; 
 
@@ -467,6 +477,10 @@ ARGUMENTOSPROC ::=
 //RETURN
 INST_RETURN ::= RETURN Exp0: e
 {: RESULT = new InstruccionReturn(e); :};
+
+//PRINT
+INST_PRINT ::= PRINT Exp0: e
+{: RESULT = new InstruccionPrint(e); :};
 
 //LLAMADA A FUNCION (PROCEDIMIENTO)
 INST_CALL_PROC ::= Ident: id PARAPERTURA ARGUMENTOSPROC_INI: arg PARCIERRE
@@ -502,7 +516,6 @@ EXPR_LLAM_FUN ::= Ident: id PARAPERTURA ARGUMENTOSPROC_INI: arg PARCIERRE
 //EXPRESION ACCESO A VECTOR
 EXPR_ACC_VECT ::= Ident: id CORCHAPERTURA Exp0: idx CORCHCIERRE
 {: RESULT = new ListIndex(id, idx); :};
-
 
 //EXPRESION VECTOR
 EXP_VECTOR ::= LLAVEAPERTURA LIST_VAL3:list LLAVECIERRE

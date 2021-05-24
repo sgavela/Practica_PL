@@ -3,6 +3,8 @@ package ast.i;
 import ast.e.Expresion;
 import ast.e.Id;
 import ast.t.Tipo;
+import ast.t.Tipos;
+import generador_codigo.Bloque;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -79,6 +81,18 @@ public class InstruccionDeclVector extends Instruccion {
                         + " es " + tam + " pero hay " + i + " elementos en la declaracion.");
         }
         return errores;
+    }
+
+    public String code_I(Bloque bloque) {
+        String s = "";
+        int size = tam;
+        //Si es una lista de lista,calculamos su tamaño completo (Si no será de enteros con size 1 cada uno)
+        if(tipo.getTipo() == Tipos.LIST) {
+            size *= tam;
+        }
+        bloque.addDirId(id.getS(), size);
+
+        return s;
     }
      
      public String toString(int prof, ArrayList<Boolean> niveles) {

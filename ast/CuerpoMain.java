@@ -1,6 +1,8 @@
 package ast;
 
 import ast.i.Instruccion;
+import generador_codigo.GeneradorCodigo;
+
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -42,6 +44,16 @@ public class CuerpoMain {
             errores += ins.chequea();
         }
         return errores;
+    }
+
+    public String genera_codigo(GeneradorCodigo gc) {
+        String s = "";
+        Iterator<Instruccion> instruccionesIt = instrucciones.iterator();
+        while(instruccionesIt.hasNext()){
+            Instruccion ins = instruccionesIt.next();
+            s += gc.generaCodigo(ins);
+        }
+        return s;
     }
     
     public String toString(int prof, ArrayList<Boolean> niveles) {

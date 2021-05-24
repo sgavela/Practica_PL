@@ -1,10 +1,14 @@
 package ast.e;
 
 import ast.t.Tipo;
+import ast.t.Tipos;
+import ast.t.TipoLista;
 import asem.TablaSimbolos;
 import java.util.ArrayList;
 import asem.ExcepcionIdNoExistente;
 import errors.ExcepcionTipoDesconocido;
+import generador_codigo.Bloque;
+import generador_codigo.GeneradorCodigo;
 import ast.getTipoVinculo;
 
 public class Id extends Expresion{
@@ -65,6 +69,28 @@ public class Id extends Expresion{
     }
 
     public String toString(int prof, ArrayList<Boolean> niveles) {
+        return s;
+    }
+
+    public String code_D(Bloque bloque, GeneradorCodigo gc) {
+        String s = "";
+        for(int i=gc.getBloques().size()-1; i>=0; --i){
+            if(gc.getBloques().get(i).hasId(this.s)){
+                Integer realDirId = gc.getBloques().get(i).getDirId(this.s) * 4;
+                s += "i32.const " + realDirId.toString() + '\n';
+                Integer realDirInicio = gc.getBloques().get(i).getDirInicio() * 4;
+                s += "i32.const " + realDirInicio.toString() + '\n';
+                s += "i32.add\n";
+                return s;
+            }
+        }
+        return s;
+    }
+
+    public String code_E(Bloque bloque, GeneradorCodigo gc) {
+        String s = "";
+        s += this.code_D(bloque, gc);
+        s += "i32.load\n";
         return s;
     }
 }

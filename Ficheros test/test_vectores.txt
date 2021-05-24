@@ -18,10 +18,10 @@ main {
     vector<int, 2> v1 = {1, 2};
     vector<int, 2> v2 = {3, 4};
     vector<int, 2> v3 = {5, 6};
-    vector<vector<int, 2>, 3> m = {v1, v2, v3};
+    vector<vector<int, 2>, 3> m = {{1, 3},{2, 3},{4, 2}};
     vector<bool, 5> u = {false, 3+ 4, funcion(a, b), v[7]};
     int pos = v[3];
-    pos = v[3][2];  
+    //pos = v[3][2];  
     vector<Persona, 4> p;
     vector<vector<int, 3>, 4> m;  
 }

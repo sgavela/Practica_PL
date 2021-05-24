@@ -1,10 +1,15 @@
 package ast.e;
 
 import ast.t.Tipo;
+import ast.t.TipoLista;
+import ast.t.Tipos;
+
 import java.util.ArrayList;
 import java.util.ArrayDeque;
 import asem.TablaSimbolos;
 import errors.ExcepcionTipoDesconocido;
+import generador_codigo.Bloque;
+import generador_codigo.GeneradorCodigo;
 import asem.ExcepcionIdNoExistente;
 import ast.getTipoVinculo;
 
@@ -51,6 +56,32 @@ public class ListIndex extends Expresion {
     public Tipo getTipo(){
         return tipoLista;
     }
+
+    public String code_D(Bloque bloque, GeneradorCodigo gc) {
+        String s = "";
+        s += id.code_D(bloque, gc);
+        s += "i32.const ";
+        Integer size;
+        if(tipoLista.getTipo() == Tipos.LIST) {
+            size = ((TipoLista) tipoLista).length();
+            size = ((TipoLista) tipoLista).size_elems();
+        }
+        else {
+            size = 1;
+        }
+        s += size.toString() + '\n';
+        s += idx.code_E(bloque, gc);
+        s += "i32.mul\n";
+        s += "i32.add\n";
+        return s;
+    }
+
+    public String code_E(Bloque bloque, GeneradorCodigo gc) {
+        String s = "";
+        s += this.code_D(bloque, gc);
+        s += "i32.load\n";
+        return s;
+    }
     
     public String toString() {
         String s = id.toString() + idx.toString();
@@ -64,7 +95,7 @@ public class ListIndex extends Expresion {
 
     @Override
     public Expresiones tipo() {
-        return Expresiones.ID;
+        return Expresiones.LISTINDEX;
     }
     
 }

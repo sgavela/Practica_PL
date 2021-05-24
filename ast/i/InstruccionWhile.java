@@ -4,6 +4,8 @@ import ast.e.Expresion;
 import java.util.ArrayList;
 import asem.TablaSimbolos;
 import ast.t.Tipos;
+import generador_codigo.Bloque;
+import generador_codigo.GeneradorCodigo;
 
 public class InstruccionWhile extends Instruccion {
     private Expresion condicion;
@@ -35,6 +37,22 @@ public class InstruccionWhile extends Instruccion {
         }
         errores += cuerpo_while.chequea();
         return errores;
+    }
+
+    public String code_I(Bloque bloque, GeneradorCodigo gc) {
+        String s = "";
+        s += "block\nloop\n";
+        s += condicion.code_E(bloque, gc);
+        s += "i32.eqz\n";
+        s += "br_if 1\n";
+        gc.abreBloque(bloque);
+        for(Instruccion i: cuerpo_while.getInstr()){
+            s += gc.generaCodigo(i);
+        }
+        s += "br 0\n";
+        gc.cierraBloque();
+        s += "end\nend\n";
+        return s;
     }
     
     public String toString(int prof, ArrayList<Boolean> niveles) {

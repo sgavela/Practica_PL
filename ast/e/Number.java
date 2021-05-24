@@ -2,6 +2,9 @@ package ast.e;
 
 import ast.t.Tipo;
 import ast.t.Tipos;
+import generador_codigo.Bloque;
+import generador_codigo.GeneradorCodigo;
+
 import java.util.ArrayList;
 import asem.TablaSimbolos;
 
@@ -31,6 +34,10 @@ public class Number extends Expresion {
 
     public String toString(int prof, ArrayList<Boolean> niveles) {
         return s;
+    }
+
+    public String code_E(Bloque bloque, GeneradorCodigo gc) {
+        return "i32.const " + s + '\n';
     }
     
 }

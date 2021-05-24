@@ -1,6 +1,8 @@
 package ast.i;
 
 import ast.i.Instruccion;
+import generador_codigo.Bloque;
+
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Iterator;

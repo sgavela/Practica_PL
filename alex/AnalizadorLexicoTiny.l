@@ -55,6 +55,7 @@ return = return
 void = void
 new = new
 main = main
+print = print
 
 identificador = {letra}({letra}|{digito}|{barrabaja})*
 
@@ -112,6 +113,7 @@ dollar = \$
 {void}                    {return ops.unidadVoid();}
 {new}                     {return ops.unidadNew();}
 {main}                    {return ops.unidadMain();}
+{print}                   {return ops.unidadPrint();}
 
 {identificador}           {return ops.unidadIdentificador();}
 

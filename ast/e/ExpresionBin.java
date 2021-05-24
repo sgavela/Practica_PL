@@ -1,9 +1,14 @@
 package ast.e;
 
 import java.util.ArrayList;
+
+import org.ietf.jgss.GSSContext;
+
 import asem.TablaSimbolos;
 import ast.e.Expresion;
 import ast.t.Tipos;
+import generador_codigo.Bloque;
+import generador_codigo.GeneradorCodigo;
 import ast.t.Tipo;
 
 public class ExpresionBin extends Expresion {
@@ -88,6 +93,52 @@ public class ExpresionBin extends Expresion {
                 }
             }
         return errores;
+    }
+
+    public String code_E(Bloque bloque, GeneradorCodigo gc) {
+        String s = "";
+        s += opnd1.code_E(bloque, gc);
+        s += opnd2.code_E(bloque, gc);
+        if(this.tipoExpr == Expresiones.SUM) {
+            s += "i32.add\n";
+        }
+        else if(this.tipoExpr == Expresiones.SUB) {
+            s += "i32.sub\n";
+        }
+        else if(this.tipoExpr == Expresiones.DIV) {
+            s += "i32.div_s\n";
+        }
+        else if(this.tipoExpr == Expresiones.MULT) {
+            s += "i32.mul\n";
+        }
+        else if(this.tipoExpr == Expresiones.MOD) {
+            s += "i32.rem_u\n";
+        }
+        else if(this.tipoExpr == Expresiones.AND) {
+            s += "i32.and\n";
+        }
+        else if(this.tipoExpr == Expresiones.OR) {
+            s += "i32.or\n";
+        }
+        else if(this.tipoExpr == Expresiones.EQUAL) {
+            s += "i32.eq\n";
+        }
+        else if(this.tipoExpr == Expresiones.NOT_EQUAL) {
+            s += "i32.ne\n";
+        }
+        else if(this.tipoExpr == Expresiones.GT) {
+            s += "i32.gt_s\n";
+        }
+        else if(this.tipoExpr == Expresiones.LT) {
+            s += "i32.lt_s\n";
+        }
+        else if(this.tipoExpr == Expresiones.GEQ) {
+            s += "i32.ge_s\n";
+        }
+        else if(this.tipoExpr == Expresiones.LEQ) {
+            s += "i32.le_s\n";
+        }
+        return s;
     }
     
     public String toString(int prof, ArrayList<Boolean> niveles) {

@@ -6,6 +6,8 @@ import ast.e.ListIndex;
 import java.util.ArrayList;
 import asem.TablaSimbolos;
 import ast.t.Tipo;
+import generador_codigo.Bloque;
+import generador_codigo.GeneradorCodigo;
 import ast.e.List;
 
 public class InstruccionAsignacion extends Instruccion {
@@ -74,6 +76,14 @@ public class InstruccionAsignacion extends Instruccion {
             }
             return errores;
         }
+    }
+
+    public String code_I(Bloque bloque, GeneradorCodigo gc) {
+        String s = "";
+        s += identificador.code_D(bloque, gc);
+        s += valor.code_E(bloque, gc);
+        s += "i32.store\n";
+        return s;
     }
     
     public Expresion getValor() {

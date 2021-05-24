@@ -1,0 +1,31 @@
+int q = 3;
+int r = 6;
+main { 
+    int s;
+    //r vale 6
+    print r;
+    int n=2;
+    int m=8;
+    while(n<m) {
+        print m;
+        m = m/n;
+        s = q + m;
+        if(n==m){
+            //r vale 12
+            r = r*n;
+            print r;
+            int i; 
+            int j;
+            int v = 0;
+            for(i=0; i<3; i = i + 1) {
+                for(j=5;j>=0; j = j - 1) {
+                    v = v + i*j;
+                }
+            }
+            //v vale 45
+            print v;
+        }
+        //s vale 7,5
+        print s;
+    }
+}

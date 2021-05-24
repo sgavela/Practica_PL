@@ -4,10 +4,14 @@ import ast.e.Expresion;
 import ast.e.Id;
 import ast.e.ListIndex;
 import ast.t.Tipo;
+import ast.t.Tipos;
+
 import java.util.ArrayList;
 import asem.TablaSimbolos;
 import asem.ExcepcionIdNoExistente;
 import errors.ExcepcionTipoDesconocido;
+import generador_codigo.Bloque;
+import generador_codigo.GeneradorCodigo;
 
 public class InstruccionDeclaracion extends Instruccion {
     protected Tipo tipo;
@@ -71,6 +75,23 @@ public class InstruccionDeclaracion extends Instruccion {
             }
             return errores;
         }
+    }
+
+    public String code_I(Bloque bloque, GeneradorCodigo gc) {
+        String s = "";
+        bloque.addDirId(id.getS(), 1);
+        if(valor == null) {
+            s += id.code_D(bloque, gc);
+            //Le ponemos 0 por defecto
+            s += "i32.const 0\n";
+            s += "i32.store\n";
+        } 
+        else {
+            s += id.code_D(bloque, gc);
+            s += valor.code_E(bloque, gc);
+            s += "i32.store\n";
+        }
+        return s;
     }
      
     public String toString(int prof, ArrayList<Boolean> niveles) {

@@ -5,6 +5,8 @@ import ast.e.Id;
 import java.util.ArrayList;
 import asem.TablaSimbolos;
 import ast.t.Tipos;
+import generador_codigo.Bloque;
+import generador_codigo.GeneradorCodigo;
 import ast.t.Tipo;
 
 public class InstruccionFor extends Instruccion {
@@ -62,6 +64,33 @@ public class InstruccionFor extends Instruccion {
         }
         errores += cuerpo_for.chequea();
         return errores;
+    }
+
+    public String code_I(Bloque bloque, GeneradorCodigo gc) {
+        String s = "";
+        s += "block\n";
+        //Tratamos la asignacion inicial
+        bloque.addDirId(id.getS(), 1);
+        s += id.code_D(bloque, gc);
+        s += valor_ini.code_E(bloque, gc);
+        s += "i32.store\n";
+        s += "loop\n";
+        //Tratamos la condicion
+        s += condicion.code_E(bloque, gc);
+        s += "i32.eqz\n";
+        s += "br_if 1\n";
+        gc.abreBloque(bloque);
+        for(Instruccion i: cuerpo_for.getInstr()){
+           s += gc.generaCodigo(i);
+        }
+        //Tratamos la asignacion de paso
+        s += id.code_D(bloque, gc);
+        s += paso.code_E(bloque, gc);
+        s += "i32.store\n";
+        s += "br 0\n";
+        gc.cierraBloque();
+        s += "end\nend\n";
+        return s;
     }
     
     public String toString(int prof, ArrayList<Boolean> niveles){

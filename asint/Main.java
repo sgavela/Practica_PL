@@ -1,12 +1,16 @@
 package asint;
 
+import java.io.BufferedWriter;
 import java.io.FileInputStream;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.Iterator;
 
 import alex.AnalizadorLexicoTiny;
 import ast.ProgramaCompleto;
+import generador_codigo.GeneradorCodigo;
 import asem.TablaSimbolos;
 
 public class Main {
@@ -38,6 +42,17 @@ public class Main {
 			System.out.println("No se han encontrado errores en la comprobacion de tipos,"+
 				" se pasa a la generacion de codigo");
 		}
+		
+		try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter("codigo.wat"));
+			GeneradorCodigo gc = new GeneradorCodigo();
+			String codigo = ast.genera_codigo(gc);
+            writer.write(codigo);
+            writer.close();
+            System.out.println("Compilación terminada");
+        } catch (IOException e) {
+            System.err.println("Imposible volcar código en fichero .txt");
+        }
 	}  
 } 
    

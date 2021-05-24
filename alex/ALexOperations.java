@@ -89,6 +89,10 @@ public class ALexOperations {
      return new UnidadLexica(alex.fila(),ClaseLexica.MAIN,"main"); 
   }  
 
+  public UnidadLexica unidadPrint() {
+     return new UnidadLexica(alex.fila(), ClaseLexica.PRINT, "print");
+  }
+
   public UnidadLexica unidadIdentificador() {
      return new UnidadLexica(alex.fila(),ClaseLexica.IDEN,alex.lexema()); 
   }  

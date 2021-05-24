@@ -1,0 +1,15 @@
+int i;
+int j = 2;
+i = 3;
+int q = i + j;
+int k;
+int c;
+main { 
+    c = 3;
+    k = c/3;
+    int r = 2;
+    r = r + r * r;
+    print q;
+    print k;
+    print r;
+}

@@ -5,6 +5,10 @@ import java.util.ArrayList;
 import asem.TablaSimbolos;
 import ast.i.InstruccionDeclVector;
 import ast.t.Tipo;
+import ast.t.Tipos;
+import ast.t.TipoLista;
+import generador_codigo.Bloque;
+import generador_codigo.GeneradorCodigo;
 
 public class List extends Expresion {
 	private ArrayDeque<Expresion> l;
@@ -62,6 +66,15 @@ public class List extends Expresion {
         return errores;
     }
 
+    //Codigo de expresion de una lista en la forma [1,3,6,4] (no confundir con code_D de una lista como identificador)
+    public String code_E(Bloque bloque, GeneradorCodigo gc) {
+        String s = "";
+        for(Expresion e: l) {
+            s += e.code_E(bloque, gc);
+        }
+        return s;
+    }
+
     public Tipo getTipo(){return tipoLista;}
 
     public String toString() {
@@ -70,7 +83,7 @@ public class List extends Expresion {
 
     @Override
     public Expresiones tipo() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return Expresiones.LIST;
     }
 
 }
