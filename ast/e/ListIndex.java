@@ -60,17 +60,8 @@ public class ListIndex extends Expresion {
     public String code_D(Bloque bloque, GeneradorCodigo gc) {
         String s = "";
         s += id.code_D(bloque, gc);
-        s += "i32.const ";
-        Integer size;
-        if(tipoLista.getTipo() == Tipos.LIST) {
-            size = ((TipoLista) tipoLista).length();
-            size = ((TipoLista) tipoLista).size_elems();
-        }
-        else {
-            size = 1;
-        }
-        s += size.toString() + '\n';
         s += idx.code_E(bloque, gc);
+        s += "i32.const 4\n";
         s += "i32.mul\n";
         s += "i32.add\n";
         return s;

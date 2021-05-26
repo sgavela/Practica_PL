@@ -1,0 +1,19 @@
+vector<int, 5> j = {1, 2, 3, 4, 5};
+vector<int, 5> i = {10, 8, 2, 12, 11};
+bool b = true;
+main { 
+    print j[4];
+    print j[1 + 2];
+    vector<int, 5> k = {i[0] + j[0], i[1] + j[1], i[2] + j[2], i[3] + j[3], i[4] + j[4]};
+    print k[0];
+    print k[1];
+    print k[2];
+    print k[3];
+    print k[4];
+    if(b && false) {
+        print 404;
+    }
+    else {
+        print 505;
+    }
+}

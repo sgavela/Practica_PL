@@ -25,7 +25,7 @@ main {
             //v vale 45
             print v;
         }
-        //s vale 7,5
+        //s vale 7 y luego 5
         print s;
     }
 }

@@ -11,6 +11,6 @@ cd ../
 move AnalizadorSintacticoTiny.java asint 
 move ClaseLexica.java asint
 javac -cp cup.jar alex/*.java asint/*.java ast/*.java ast/e/*.java ast/t/*.java ast/i/*.java errors/*.java asem/*.java generador_codigo/*.java
-java -cp ".;cup.jar" asint.Main "Ficheros test"/test_generacion_basica2.txt
+java -cp ".;cup.jar" asint.Main "Ficheros test"/test_generacion_basica3.txt
 wat2wasm.exe codigo.wat
 node main.js

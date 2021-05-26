@@ -24,9 +24,8 @@ public class TipoLista extends Tipo{
 
     //Para calcular lo que ocupa cada elemento de la lista (para generacion de codigo)
     public Integer size_elems() {
-        Integer size = 1;
+        Integer size = tam;
         if(tipoDeLaLista.getTipo() == Tipos.LIST) {
-            size = ((TipoLista) tipoDeLaLista).length();
             size *= ((TipoLista) tipoDeLaLista).size_elems();
         }
         return size;

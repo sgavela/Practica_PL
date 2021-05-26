@@ -3,8 +3,10 @@ package ast.i;
 import ast.e.Expresion;
 import ast.e.Id;
 import ast.t.Tipo;
+import ast.t.TipoLista;
 import ast.t.Tipos;
 import generador_codigo.Bloque;
+import generador_codigo.GeneradorCodigo;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -54,8 +56,10 @@ public class InstruccionDeclVector extends Instruccion {
 
     public int vinculacion(TablaSimbolos ts){
         int errores = ts.insertaId(id, this);
-        for(Expresion valor : valores){            
-            errores += valor.vinculacion(ts);
+        if(valores != null) {
+            for(Expresion valor : valores){            
+                errores += valor.vinculacion(ts);
+            }
         }
         return errores;
     }
@@ -64,16 +68,21 @@ public class InstruccionDeclVector extends Instruccion {
         Tipo tipoTipo = this.tipo;
         //Iterator valor = valores.iterator();
         int i = 0;
-        for(Expresion valor : valores){
-            errores += valor.chequea();
-            Tipo valorTipo = valor.getTipo();
-            if (!tipoTipo.equals(valorTipo)) {
-                errores += 1;
-                System.err.println("Error de tipos. El identificador del vector es tipo " +
-                        this.tipo + " pero la expresion en la posicion " +
-                        i + " es tipo " + valor.getTipo());
+        if(valores != null){
+            for(Expresion valor : valores){
+                errores += valor.chequea();
+                Tipo valorTipo = valor.getTipo();
+                if (!tipoTipo.equals(valorTipo)) {
+                    errores += 1;
+                    System.err.println("Error de tipos. El identificador del vector es tipo " +
+                            this.tipo + " pero la expresion en la posicion " +
+                            i + " es tipo " + valor.getTipo());
+                }
+                i += 1;
             }
-            i += 1;
+        }
+        else {
+            i = tam;
         }
         if(i != tam){
             errores += 1;
@@ -83,15 +92,21 @@ public class InstruccionDeclVector extends Instruccion {
         return errores;
     }
 
-    public String code_I(Bloque bloque) {
+    public String code_I(Bloque bloque, GeneradorCodigo gc) {
         String s = "";
-        int size = tam;
-        //Si es una lista de lista,calculamos su tamaño completo (Si no será de enteros con size 1 cada uno)
-        if(tipo.getTipo() == Tipos.LIST) {
-            size *= tam;
+        bloque.addDirId(id.getS(), tam);
+        if(this.valores != null){
+            for(Integer i=0; i<tam; ++i){
+                s += id.code_D(bloque, gc);
+                s += "i32.const ";
+                s += i.toString() + "\n";
+                s += "i32.const 4\n";
+                s += "i32.mul\n";
+                s += "i32.add\n";
+                s += valores.pollFirst().code_E(bloque, gc);
+                s += "i32.store\n";
+            }        
         }
-        bloque.addDirId(id.getS(), size);
-
         return s;
     }
      

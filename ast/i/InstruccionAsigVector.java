@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.ArrayDeque;
 import asem.TablaSimbolos;
 import ast.t.Tipo;
+import generador_codigo.Bloque;
+import generador_codigo.GeneradorCodigo;
 import asem.ExcepcionIdNoExistente;
 
 public class InstruccionAsigVector extends Instruccion {
@@ -58,6 +60,23 @@ public class InstruccionAsigVector extends Instruccion {
             i += 1;
         }
         return errores;
+    }
+
+    public String code_I(Bloque bloque, GeneradorCodigo gc) {
+        String s = "";
+        if(this.valores != null){
+            for(Integer i=0; i<valores.size(); ++i){
+                s += id.code_D(bloque, gc);
+                s += "i32.const ";
+                s += i.toString() + "\n";
+                s += "i32.const 4\n";
+                s += "i32.mul\n";
+                s += "i32.add\n";
+                s += valores.pollFirst().code_E(bloque, gc);
+                s += "i32.store\n";
+            }        
+        }
+        return s;
     }
     
     public String toString(int prof, ArrayList<Boolean> niveles) {
